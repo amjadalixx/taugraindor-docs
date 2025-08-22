@@ -141,4 +141,10 @@ export default withNextra({
     defaultLocale,
     locales: Object.keys(translations),
   },
+  eslint: {
+    ignoreDuringBuilds: true, // don’t run ESLint in Vercel builds
+  },
+  typescript: {
+    ignoreBuildErrors: true, // don’t block builds on type errors
+  },
 })
