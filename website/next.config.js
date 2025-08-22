@@ -122,7 +122,7 @@ export default withNextra({
     // Fix scroll restoration (see https://github.com/vercel/next.js/issues/37893#issuecomment-1221335543)
     scrollRestoration: true,
   },
-  pageExtensions: ['tsx'],
+  pageExtensions: ['tsx', 'md', 'mdx'],
   reactStrictMode: true,
   basePath: env.BASE_PATH,
   trailingSlash: true,
