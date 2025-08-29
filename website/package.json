@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next",
     "predev": "tsup ./src/i18n.ts ./src/mdxPlugins/*.ts --format esm",
-    "build": "rm -rf .next && rm -rf out && next build",
+    "build": "NODE_OPTIONS='--max-old-space-size=8192' rm -rf .next && rm -rf out && next build",
     "prebuild": "pnpm predev",
     "prebuild:ci": "pnpm fetch-remote-docs && pnpm fetch-api-reference && pnpm fix-pages-structure",
     "postbuild": "next-sitemap --config next-sitemap.config.mjs && node scripts/sitemap-ci.js",
