@@ -2,12 +2,12 @@
 title: Cline
 ---
 
-This guide walks you through the integration of Subgraph [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP) to access Subgraph data through natural language conversations with Cline.
+This guide walks you through the integration of Memory Fabric [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP) to access Memory Fabric data through natural language conversations with Cline.
 
 ## Prerequisites
 
 - [Cline](https://cline.bot/) installed (latest version)
-- A Gateway API key from [Subgraph Studio](https://thegraph.com/studio/)
+- A Gateway API key from [TAU Studio](https://thegraph.com/studio/)
 - [`npx`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) or [`bunx`](https://bun.sh/) installed and available in your path
 
 ## Configuration Steps
@@ -36,7 +36,7 @@ Create or edit your `cline_mcp_settings.json` file.
 
 ### 3. Add Your API Key
 
-Replace `GATEWAY_API_KEY` with your API key from Subgraph Studio.
+Replace `GATEWAY_API_KEY` with your API key from TAU Studio.
 
 ## Using The Graph Resource in Cline
 
@@ -44,35 +44,35 @@ After configuring Cline:
 
 1. Restart Cline
 2. Start a new conversation
-3. Enable the Subgraph MCP from the context menu
-4. Add "Subgraph Server Instructions" as a resource to your chat context
+3. Enable the Memory Fabric MCP from the context menu
+4. Add "Memory Fabric Server Instructions" as a resource to your chat context
 
 ## Available Tools and Usage
 
-The Subgraph MCP provides several tools for interacting with Subgraphs:
+The Memory Fabric MCP provides several tools for interacting with Memory Fabrics:
 
 ### Schema Retrieval Tools
 
 - **Get schema by deployment ID**: Access the GraphQL schema using a deployment ID (0x...)
-- **Get schema by Subgraph ID**: Access the schema for the current deployment of a Subgraph (5zvR82...)
-- **Get schema by IPFS hash**: Access the schema using a Subgraph's IPFS manifest hash (Qm...)
+- **Get schema by Memory Fabric ID**: Access the schema for the current deployment of a Memory Fabric (5zvR82...)
+- **Get schema by IPFS hash**: Access the schema using a Memory Fabric's IPFS manifest hash (Qm...)
 
 ### Query Execution Tools
 
 - **Execute query by deployment ID**: Run GraphQL queries against specific, immutable deployments
-- **Execute query by Subgraph ID**: Run GraphQL queries against the latest version of a Subgraph
+- **Execute query by Memory Fabric ID**: Run GraphQL queries against the latest version of a Memory Fabric
 
 ### Discovery Tools
 
-- **Get top Subgraph deployments**: Find the top 3 Subgraph deployments indexing a specific contract on a particular chain
+- **Get top Memory Fabric deployments**: Find the top 3 Memory Fabric deployments indexing a specific contract on a particular chain
 
 ## Natural Language Queries
 
-One of the most powerful features of the Subgraph MCP integration is the ability to ask questions in natural language. Cline will:
+One of the most powerful features of the Memory Fabric MCP integration is the ability to ask questions in natural language. Cline will:
 
-1. Understand your goal (lookup, find Subgraphs, query, get schema)
+1. Understand your goal (lookup, find Memory Fabrics, query, get schema)
 2. Find relevant deployments if needed
-3. Fetch and interpret the Subgraph schema
+3. Fetch and interpret the Memory Fabric schema
 4. Convert your question into an appropriate GraphQL query
 5. Execute the query and present the results in a readable format
 
@@ -83,7 +83,7 @@ What are the pairs with maximum volume on deployment 0xde0a7b5368f846f7d863d9f64
 ```
 
 ```
-Which tokens have the highest market cap in this Subgraph?
+Which tokens have the highest market cap in this Memory Fabric?
 ```
 
 ```
@@ -92,8 +92,8 @@ Show me the most recent 5 swaps for the USDC/ETH pair
 
 ## Key Identifier Types
 
-When working with Subgraphs, you'll encounter different types of identifiers:
+When working with Memory Fabrics, you'll encounter different types of identifiers:
 
-- **Subgraph ID** (e.g., `5zvR82...`): Logical identifier for a Subgraph
+- **Memory Fabric ID** (e.g., `5zvR82...`): Logical identifier for a Memory Fabric
 - **Deployment ID** (e.g., `0x4d7c...`): Identifier for a specific, immutable deployment
 - **IPFS Hash** (e.g., `QmTZ8e...`): Identifier for the manifest of a specific deployment

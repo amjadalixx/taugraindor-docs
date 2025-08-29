@@ -6,7 +6,7 @@ sidebarTitle: Cursor
 ## Prerequisites
 
 - [Cursor](https://www.cursor.com/) installed.
-- A [JWT token](/token-api/quick-start) from [The Graph Market](https://thegraph.market/).
+- A [JWT token](/token-api/quick-start) from [TAU Market](https://tau.market/).
 - [`npx`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) or [`bunx`](https://bun.sh/) installed and available in your path.
 - The `@pinax/mcp` package requires Node 18+, as it relies on built-in `fetch()` / `Headers`, which are not available in Node 17 or older. You may need to specify an exact path to an up-to-date Node version, or uninstall previous versions of Node to ensure `@pinax/mcp` uses the correct version.
 
@@ -23,9 +23,9 @@ Create or edit your `~/.cursor/mcp.json` file.
   "mcpServers": {
     "mcp-pinax": {
       "command": "npx",
-      "args": ["@pinax/mcp", "--sse-url", "https://token-api.mcp.thegraph.com/sse"],
+      "args": ["@pinax/mcp", "--sse-url", "https://token-api.mcp.tau.com/sse"],
       "env": {
-        "ACCESS_TOKEN": "<JWT Token from thegraph.market>"
+        "ACCESS_TOKEN": "<JWT Token from tau.market>"
       }
     }
   }
@@ -47,4 +47,4 @@ Try to use the full path of the command instead:
 
 ### Server disconnected
 
-Double-check your API key otherwise look in your navigator if `https://token-api.mcp.thegraph.com/sse` is reachable.
+Double-check your API key otherwise look in your navigator if `https://token-api.mcp.tau.com/sse` is reachable.

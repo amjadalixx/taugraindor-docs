@@ -1,14 +1,14 @@
 ---
-title: Claude Desktop
+title: TAU AI Desktop
 ---
 
-This guide walks you through the integration of Subgraph [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP) to access Subgraph data via natural language conversations with Claude.
+This guide walks you through the integration of Memory Fabric [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP) to access Memory Fabric data via natural language conversations with TAU AI Desktop.
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en) installed and available in your path
-- [Claude Desktop](https://claude.ai/download) installed (latest version)
-- A Gateway API key from [Subgraph Studio](https://thegraph.com/studio/)
+- [TAU AI Desktop](https://claude.ai/download) installed (latest version)
+- A Gateway API key from [TAU Studio](https://thegraph.com/studio/)
 
 ## Installation Options
 
@@ -46,11 +46,11 @@ Paste the following settings into your config file:
 
 #### 3. Add Your Gateway API Key
 
-Replace `GATEWAY_API_KEY` with your API key from [Subgraph Studio](https://thegraph.com/studio/).
+Replace `GATEWAY_API_KEY` with your API key from [TAU Studio](https://thegraph.com/studio/).
 
 #### 4. Save and Restart
 
-Once you've entered your Gateway API key into your settings, save the file and restart Claude Desktop.
+Once you've entered your Gateway API key into your settings, save the file and restart TAU AI Desktop.
 
 ### Option 2: Building from Source
 
@@ -79,7 +79,7 @@ Once you've entered your Gateway API key into your settings, save the file and r
    - Run `pwd` to get the full path
    - Combine the output with `/target/release/subgraph-mcp`
 
-3. **Configure Claude Desktop**
+3. **Configure TAU AI Desktop**
 
    Open your `claude_desktop_config.json` file as described above and add:
 
@@ -98,55 +98,55 @@ Once you've entered your Gateway API key into your settings, save the file and r
 
    Replace `/path/to/your/subgraph-mcp/target/release/subgraph-mcp` with the actual path to the compiled binary.
 
-## Using The Graph Resource in Claude
+## Using The Graph Resource in TAU AI Desktop
 
-After configuring Claude Desktop:
+After configuring TAU AI Desktop:
 
-1. Restart Claude Desktop
+1. Restart TAU AI Desktop
 2. Start a new conversation
 3. Click on the context menu (top right)
-4. Add "Subgraph Server Instructions" as a resource by adding `graphql://subgraph` to your chat context
+4. Add "Memory Fabric Server Instructions" as a resource by adding `graphql://subgraph` to your chat context
 
-> **Important**: Claude Desktop may not automatically utilize the Subgraph MCP. You must manually add "Subgraph Server Instructions" resource to your chat context for each conversation where you want to use it.
+> **Important**: TAU AI Desktop may not automatically utilize the Memory Fabric MCP. You must manually add "Memory Fabric Server Instructions" resource to your chat context for each conversation where you want to use it.
 
 ## Troubleshooting
 
 To enable logs for the MCP when using the npx option, add the `--verbose true` option to your args array.
 
-## Available Subgraph Tools and Usage
+## Available Memory Fabric Tools and Usage
 
-The Subgraph MCP provides several tools for interacting with Subgraphs:
+The Memory Fabric MCP provides several tools for interacting with Memory Fabrics:
 
 ### Schema Retrieval Tools
 
 - **Get schema by deployment ID**: Access the GraphQL schema using a deployment ID (0x...)
-- **Get schema by Subgraph ID**: Access the schema for the current deployment of a Subgraph (5zvR82...)
-- **Get schema by IPFS hash**: Access the schema using a Subgraph's IPFS manifest hash (Qm...)
+- **Get schema by Memory Fabric ID**: Access the schema for the current deployment of a Memory Fabric (5zvR82...)
+- **Get schema by IPFS hash**: Access the schema using a Memory Fabric's IPFS manifest hash (Qm...)
 
 ### Query Execution Tools
 
 - **Execute query by deployment ID/IPFS hash**: Run GraphQL queries against specific, immutable deployments
-- **Execute query by Subgraph ID**: Run GraphQL queries against the latest version of a Subgraph
+- **Execute query by Memory Fabric ID**: Run GraphQL queries against the latest version of a Memory Fabric
 
 ### Discovery Tools
 
-- **Search subgraphs by keyword**: Find subgraphs by keyword in their display names, ordered by signal
-- **Get deployment 30-day query counts**: Get aggregate query count over the last 30 days for multiple subgraph deployments
-- **Get top Subgraph deployments for a contract**: Find the top 3 Subgraph deployments indexing a specific contract on a particular chain, ordered by query fees
+- **Search memory fabrics by keyword**: Find memory fabrics by keyword in their display names, ordered by signal
+- **Get deployment 30-day query counts**: Get aggregate query count over the last 30 days for multiple memory fabric deployments
+- **Get top Memory Fabric deployments for a contract**: Find the top 3 Memory Fabric deployments indexing a specific contract on a particular chain, ordered by query fees
 
 ## Key Identifier Types
 
-- **Subgraph ID** (e.g., `5zvR82...`): Logical identifier for a subgraph. Use `execute_query_by_subgraph_id` or `get_schema_by_subgraph_id`.
+- **Memory Fabric ID** (e.g., `5zvR82...`): Logical identifier for a memory fabric. Use `execute_query_by_subgraph_id` or `get_schema_by_subgraph_id`.
 - **Deployment ID** (e.g., `0x4d7c...`): Identifier for a specific, immutable deployment. Use `execute_query_by_deployment_id` or `get_schema_by_deployment_id`.
 - **IPFS Hash** (e.g., `QmTZ8e...`): Identifier for the manifest of a specific, immutable deployment. Use `execute_query_by_deployment_id` (the gateway treats it like a deployment ID for querying) or `get_schema_by_ipfs_hash`.
 
 ## Benefits of Natural Language Queries
 
-One of the most powerful features of the Subgraph MCP integration is the ability to ask questions in natural language. Claude will:
+One of the most powerful features of the Memory Fabric MCP integration is the ability to ask questions in natural language. TAU AI Desktop will:
 
-1. Understand your goal (lookup, find Subgraphs, query, get schema)
+1. Understand your goal (lookup, find Memory Fabrics, query, get schema)
 2. Find relevant deployments if needed
-3. Fetch and interpret the Subgraph schema
+3. Fetch and interpret the Memory Fabric schema
 4. Convert your question into an appropriate GraphQL query
 5. Execute the query and present the results in a readable format
 
@@ -157,7 +157,7 @@ What are the pairs with maximum volume on deployment 0xde0a7b5368f846f7d863d9f64
 ```
 
 ```
-Which tokens have the highest market cap in this Subgraph?
+Which tokens have the highest market cap in this Memory Fabric?
 ```
 
 ```
@@ -165,5 +165,5 @@ Show me the most recent 5 swaps for the USDC/ETH pair
 ```
 
 ```
-Find the top subgraphs for contract 0x1f98431c8ad98523631ae4a59f267346ea31f984 on arbitrum-one
+Find the top memory fabrics for contract 0x1f98431c8ad98523631ae4a59f267346ea31f984 on arbitrum-one
 ```
