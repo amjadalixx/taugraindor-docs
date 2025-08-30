@@ -1,8 +1,0 @@
-printf '%s\n' \
-'# Exclude large docs sections for now (temporary)' \
-'src/pages/en/indexing/**' \
-'src/pages/en/subgraphs/**' \
-'src/pages/en/api/**' \
-'src/pages/en/network/**' \
-'src/pages/en/legacy-guide/**' \
-> .vercelignore

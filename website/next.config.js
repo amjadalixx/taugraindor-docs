@@ -122,7 +122,7 @@ export default withNextra({
     // Fix scroll restoration (see https://github.com/vercel/next.js/issues/37893#issuecomment-1221335543)
     scrollRestoration: true,
   },
-  pageExtensions: ['tsx', 'md', 'mdx'],
+  pageExtensions: ['tsx'],
   reactStrictMode: true,
   basePath: env.BASE_PATH,
   trailingSlash: true,
@@ -140,11 +140,5 @@ export default withNextra({
   i18n: {
     defaultLocale,
     locales: Object.keys(translations),
-  },
-  eslint: {
-    ignoreDuringBuilds: true, // don’t run ESLint in Vercel builds
-  },
-  typescript: {
-    ignoreBuildErrors: true, // don’t block builds on type errors
   },
 })

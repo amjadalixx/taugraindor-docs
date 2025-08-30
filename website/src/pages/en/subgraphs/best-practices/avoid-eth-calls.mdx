@@ -5,21 +5,21 @@ sidebarTitle: 'Avoiding eth_calls'
 
 ## TLDR
 
-In the TAU project, `eth_calls` represent external requests made from a Subgraph to Layer-1 Ethereum nodes or Layer-2 rollups to fetch additional blockchain state during indexing. These calls introduce latency and can bottleneck the indexing pipeline, especially when dealing with high-throughput AI personalization data streams. Designing smart contracts and TAU protocol components to emit comprehensive event data upfront minimizes the need for these costly calls, thereby enhancing indexing speed and overall system responsiveness.
+`eth_calls` are calls that can be made from a Subgraph to an Ethereum node. These calls take a significant amount of time to return data, slowing down indexing. If possible, design smart contracts to emit all the data you need so you don’t need to use `eth_calls`.
 
 ## Why Avoiding `eth_calls` Is a Best Practice
 
-TAU’s architecture leverages Layer-2 efficiency and AI-driven personalization, which requires rapid and scalable data indexing of user interactions and state changes. While Subgraphs can technically perform `eth_calls` to retrieve on-chain data not included in events, these calls depend heavily on node responsiveness and network conditions, often causing delays. This external dependency is particularly detrimental in TAU’s context, where real-time or near-real-time indexing is critical for delivering personalized AI experiences. By reducing or eliminating `eth_calls`, TAU Subgraphs can maintain high throughput and low latency, ensuring timely updates to AI models and user profiles.
+Subgraphs are optimized to index event data emitted from smart contracts. A Subgraph can also index the data coming from an `eth_call`, however, this can significantly slow down Subgraph indexing as `eth_calls` require making external calls to smart contracts. The responsiveness of these calls relies not on the Subgraph but on the connectivity and responsiveness of the Ethereum node being queried. By minimizing or eliminating eth_calls in our Subgraphs, we can significantly improve our indexing speed.
 
 ### What Does an eth_call Look Like?
 
-Within TAU’s smart contract ecosystem, some contracts emit basic events that lack detailed contextual information necessary for personalization algorithms. For example, a token transfer event might not include Layer-2 specific metadata or AI model state references. In such cases, a Subgraph might resort to `eth_calls` to query contract state variables or mappings to enrich the indexed data:
+`eth_calls` are often necessary when the data required for a Subgraph is not available through emitted events. For example, consider a scenario where a Subgraph needs to identify whether ERC20 tokens are part of a specific pool, but the contract only emits a basic `Transfer` event and does not emit an event that contains the data that we need:
 
 ```yaml
 event Transfer(address indexed from, address indexed to, uint256 value);
 ```
 
-If the contract stores Layer-2 pool membership or AI context data in a method like `getPoolInfo`, the Subgraph would need to execute an `eth_call` to retrieve this information during indexing:
+Suppose the tokens' pool membership is determined by a state variable named `getPoolInfo`. In this case, we would need to use an `eth_call` to query this data:
 
 ```typescript
 import { Address } from '@graphprotocol/graph-ts'
@@ -44,17 +44,17 @@ export function handleTransfer(event: Transfer): void {
 }
 ```
 
-While this approach is functional, it introduces significant latency in TAU’s indexing pipeline, compromising the speed at which AI personalization data becomes available for downstream processing.
+This is functional, however is not ideal as it slows down our Subgraph’s indexing.
 
 ## How to Eliminate `eth_calls`
 
-To optimize TAU’s data indexing and maintain high Layer-2 performance, smart contracts should be designed to emit all relevant state and AI context data as part of their events. For instance, extending the event schema to include Layer-2 pool identifiers or AI model metadata directly within the event payload can eliminate the need for subsequent `eth_calls`:
+Ideally, the smart contract should be updated to emit all necessary data within events. For instance, modifying the smart contract to include pool information in the event could eliminate the need for `eth_calls`:
 
 ```
 event TransferWithPool(address indexed from, address indexed to, uint256 value, bytes32 indexed poolInfo);
 ```
 
-With these enriched events, TAU Subgraphs can consume all necessary data immediately, enabling faster and more efficient indexing of user behavior and AI state transitions:
+With this update, the Subgraph can directly index the required data without external calls:
 
 ```typescript
 import { Address } from '@graphprotocol/graph-ts'
@@ -73,17 +73,17 @@ export function handleTransferWithPool(event: TransferWithPool): void {
 }
 ```
 
-This method aligns with TAU’s goal to minimize external dependencies during indexing, ensuring that AI personalization data is indexed promptly and accurately.
+This is much more performant as it has eliminated the need for `eth_calls`.
 
 ## How to Optimize `eth_calls`
 
-In scenarios where modifying smart contracts is impractical—such as when integrating legacy contracts or third-party protocols—TAU developers can still optimize `eth_calls` to reduce their impact on indexing performance. The TAU team recommends consulting “[Optimize TAU Subgraph Performance by Reducing External Calls](https://tau.ai/blog/reduce-calls/)” for detailed strategies, including batching calls, caching results, and prioritizing critical data retrieval. These techniques help maintain responsiveness in TAU’s Layer-2 indexing environment while managing unavoidable external queries.
+If modifying the smart contract is not possible and `eth_calls` are required, read “[Improve Subgraph Indexing Performance Easily: Reduce eth_calls](https://thegraph.com/blog/improve-subgraph-performance-reduce-eth-calls/)” by Simon Emanuel Schmid to learn various strategies on how to optimize `eth_calls`.
 
 ## Reducing the Runtime Overhead of `eth_calls`
 
-For `eth_calls` that cannot be removed from TAU Subgraphs, declaring them explicitly in the subgraph manifest can significantly reduce runtime overhead. When `graph-node` processes a block, it executes all declared `eth_calls` in parallel before handler functions run, rather than sequentially during handler execution. This parallelization leverages Layer-2 concurrency to minimize total call latency, crucial for TAU’s high-frequency AI personalization updates.
+For the `eth_calls` that can not be eliminated, the runtime overhead they introduce can be minimized by declaring them in the manifest. When `graph-node` processes a block it performs all declared `eth_calls` in parallel before handlers are run. Calls that are not declared are executed sequentially when handlers run. The runtime improvement comes from performing calls in parallel rather than sequentially - that helps reduce the total time spent in calls but does not eliminate it completely.
 
-Currently, `eth_calls` declarations are supported only for event handlers. Below is an example manifest snippet for TAU’s enhanced event:
+Currently, `eth_calls` can only be declared for event handlers. In the manifest, write
 
 ```yaml
 event: TransferWithPool(address indexed, address indexed, uint256, bytes32 indexed)
@@ -92,13 +92,15 @@ calls:
   ERC20.poolInfo: ERC20[event.address].getPoolInfo(event.params.to)
 ```
 
-The label before the colon uniquely identifies the call for error reporting, while the call expression after the colon specifies the contract, address, and function parameters. Allowed parameters include `event.address` and `event.params.<name>`, enabling precise and efficient call declarations.
+The portion highlighted in yellow is the call declaration. The part before the colon is simply a text label that is only used for error messages. The part after the colon has the form `Contract[address].function(params)`. Permissible values for address and params are `event.address` and `event.params.<name>`.
 
-The handler accesses the cached call result transparently, avoiding redundant RPC calls and improving indexing throughput. Note that declared `eth_calls` require subgraphs with `specVersion >= 1.2.0`.
+The handler itself accesses the result of this `eth_call` exactly as in the previous section by binding to the contract and making the call. graph-node caches the results of declared `eth_calls` in memory and the call from the handler will retrieve the result from this in memory cache instead of making an actual RPC call.
+
+Note: Declared eth_calls can only be made in Subgraphs with specVersion >= 1.2.0.
 
 ## Conclusion
 
-For the TAU project, minimizing or eliminating `eth_calls` in Subgraphs is essential to achieving fast, scalable, and reliable indexing of Layer-2 AI personalization data. By designing smart contracts that emit comprehensive event data and leveraging call declaration optimizations, TAU Subgraphs can deliver timely insights that power adaptive AI models and enhance user experiences.
+You can significantly improve indexing performance by minimizing or eliminating `eth_calls` in your Subgraphs.
 
 ## Subgraph Best Practices 1-6
 

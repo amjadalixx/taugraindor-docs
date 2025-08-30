@@ -48,6 +48,7 @@ import {
   Subgraph,
   Substreams,
   SubstreamsPoweredSubgraph,
+  TheGraph,
   Translate,
 } from '@edgeandnode/gds/icons'
 
@@ -178,7 +179,7 @@ export default function Layout({ pageOpts, children }: NextraThemeLayoutProps<Fr
           return <House alt="" variant={selected ? 'fill' : 'regular'} />
         }
         if (routeWithoutLocale === '/about' || routeWithoutLocale.startsWith('/about/')) {
-          return <House alt="" variant={selected ? 'fill' : 'regular'} />
+          return <TheGraph alt="" />
         }
         if (routeWithoutLocale === '/supported-networks' || routeWithoutLocale.startsWith('/supported-networks/')) {
           return <Stack alt="" variant={selected ? 'fill' : 'regular'} />
@@ -378,14 +379,8 @@ export default function Layout({ pageOpts, children }: NextraThemeLayoutProps<Fr
         >
           <div className="contents md:flex md:items-center md:justify-center md:ps-[var(--graph-docs-header-padding)]">
             <div className="flex items-center max-md:ml-2 md:me-auto">
-              <ButtonOrLink href="/">
-                <img
-                  src={`${process.env.BASE_PATH ?? ''}/img/taugraindorlogo.png`}
-                  alt="Taugraindor"
-                  width={28}
-                  height={28}
-                  className="h-7 w-auto"
-                />
+              <ButtonOrLink href="https://thegraph.com/">
+                <TheGraph size={7} color="white" />
               </ButtonOrLink>
               <span className="me-4.5 ms-3.5 h-5 w-px shrink-0 bg-space-1300" />
               <ButtonOrLink

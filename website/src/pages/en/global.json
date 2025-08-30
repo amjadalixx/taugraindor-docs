@@ -3,14 +3,14 @@
     "title": "Main navigation",
     "show": "Show navigation",
     "hide": "Hide navigation",
-    "subgraphs": "Memory Fabric",
-    "substreams": "Trust Index",
-    "sps": "Growth Kit",
-    "ai-suite": "TAU AI ",
-    "tokenApi": "Token Intelligence API",
-    "indexing": "Knowledge Indexing",
-    "resources": "Developer Resources",
-    "archived": "Legacy (Archive)"
+    "subgraphs": "Subgraphs",
+    "substreams": "Substreams",
+    "sps": "Substreams-Powered Subgraphs",
+    "ai-suite": "AI Suite",
+    "tokenApi": "Token API",
+    "indexing": "Indexing",
+    "resources": "Resources",
+    "archived": "Archived"
   },
   "page": {
     "lastUpdated": "Last updated",
