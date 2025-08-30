@@ -1,4 +1,3 @@
-cat > website/scripts/vercel-build.cjs <<'EOF'
 // website/scripts/vercel-build.cjs
 const { execSync } = require("node:child_process");
 const { renameSync, existsSync, mkdirSync, rmSync, writeFileSync } = require("node:fs");
@@ -39,7 +38,7 @@ function stashLocales(dir) {
   const tmp = dir + ".tmp-stash";
   ensureDir(tmp);
 
-  // Stash the dynamic [locale] route to prevent Next from generating non-en roots
+  // Stash the dynamic [locale] route so Next doesn't try to build non-en roots.
   if (existsSync(DYNAMIC_LOCALE_DIR)) {
     const dst = join(tmp, "[locale]");
     renameSync(DYNAMIC_LOCALE_DIR, dst);
@@ -107,4 +106,3 @@ function restoreLocales(tmp) {
     }
   }
 })();
-EOF
