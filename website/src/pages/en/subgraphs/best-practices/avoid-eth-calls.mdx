@@ -1,38 +1,115 @@
 ---
-title: TAU Project - Decentralized AI Personalization Layer
-sidebarTitle: 'TAU Project Idea'
+title: Subgraph Best Practice 4 - Improve Indexing Speed by Avoiding eth_calls
+sidebarTitle: 'Avoiding eth_calls'
 ---
 
-## Introduction
+## TLDR
 
-TAU is a decentralized AI personalization protocol built on Ethereum Layer 2 (L2) solutions. It aims to empower users with personalized experiences across decentralized applications (dApps) by leveraging blockchain technology and AI, while preserving privacy and data ownership.
+In the TAU project, `eth_calls` represent external requests made from a Subgraph to Layer-1 Ethereum nodes or Layer-2 rollups to fetch additional blockchain state during indexing. These calls introduce latency and can bottleneck the indexing pipeline, especially when dealing with high-throughput AI personalization data streams. Designing smart contracts and TAU protocol components to emit comprehensive event data upfront minimizes the need for these costly calls, thereby enhancing indexing speed and overall system responsiveness.
 
-## Vision
+## Why Avoiding `eth_calls` Is a Best Practice
 
-TAU envisions a user-centric personalization ecosystem that breaks free from centralized data silos. By enabling seamless, privacy-preserving personalization across multiple dApps and platforms, TAU seeks to foster a more engaging and tailored user experience in the decentralized web.
+TAU’s architecture leverages Layer-2 efficiency and AI-driven personalization, which requires rapid and scalable data indexing of user interactions and state changes. While Subgraphs can technically perform `eth_calls` to retrieve on-chain data not included in events, these calls depend heavily on node responsiveness and network conditions, often causing delays. This external dependency is particularly detrimental in TAU’s context, where real-time or near-real-time indexing is critical for delivering personalized AI experiences. By reducing or eliminating `eth_calls`, TAU Subgraphs can maintain high throughput and low latency, ensuring timely updates to AI models and user profiles.
 
-## Core Components
+### What Does an eth_call Look Like?
 
-- **TAU Token**: The native token incentivizes participation, rewards contributors, and governs protocol upgrades through decentralized governance mechanisms.
+Within TAU’s smart contract ecosystem, some contracts emit basic events that lack detailed contextual information necessary for personalization algorithms. For example, a token transfer event might not include Layer-2 specific metadata or AI model state references. In such cases, a Subgraph might resort to `eth_calls` to query contract state variables or mappings to enrich the indexed data:
 
-- **AI-powered Personalization Engine**: Utilizes advanced machine learning models to deliver context-aware recommendations and personalized content based on user preferences and behavior.
+```yaml
+event Transfer(address indexed from, address indexed to, uint256 value);
+```
 
-- **Subgraph/Graph-Data Integration**: Integrates with The Graph protocol to access rich, contextual blockchain data, enabling deeper insights and more accurate personalization.
+If the contract stores Layer-2 pool membership or AI context data in a method like `getPoolInfo`, the Subgraph would need to execute an `eth_call` to retrieve this information during indexing:
 
-- **L2 Scalability**: Built on Ethereum Layer 2 to ensure low-cost, high-speed interactions, making personalized experiences seamless and economically viable.
+```typescript
+import { Address } from '@graphprotocol/graph-ts'
+import { ERC20, Transfer } from '../generated/ERC20/ERC20'
+import { TokenTransaction } from '../generated/schema'
 
-## How It Works
+export function handleTransfer(event: Transfer): void {
+  let transaction = new TokenTransaction(event.transaction.hash.toHex())
 
-TAU combines user-provided context with on-chain data indexed via subgraphs to create personalized experiences across various sectors such as DeFi, NFTs, SocialFi, and more. Users can opt-in to share contextual information which, together with blockchain data, feeds into the AI engine to tailor content, recommendations, and interactions dynamically across participating dApps.
+  // Bind the ERC20 contract instance to the given address:
+  let instance = ERC20.bind(event.address)
 
-## Benefits
+  // Retrieve pool information via eth_call
+  let poolInfo = instance.getPoolInfo(event.params.to)
 
-- **Faster and More Relevant User Experiences**: By delivering personalized content and actions, TAU reduces friction and enhances engagement.
+  transaction.pool = poolInfo.toHexString()
+  transaction.from = event.params.from.toHexString()
+  transaction.to = event.params.to.toHexString()
+  transaction.value = event.params.value
 
-- **Privacy-First Personalization**: Users retain control over their data and choose what context to share, ensuring privacy and security.
+  transaction.save()
+}
+```
 
-- **Open Data Network**: TAU fosters an interoperable ecosystem where personalization insights can flow across dApps without centralized intermediaries.
+While this approach is functional, it introduces significant latency in TAU’s indexing pipeline, compromising the speed at which AI personalization data becomes available for downstream processing.
+
+## How to Eliminate `eth_calls`
+
+To optimize TAU’s data indexing and maintain high Layer-2 performance, smart contracts should be designed to emit all relevant state and AI context data as part of their events. For instance, extending the event schema to include Layer-2 pool identifiers or AI model metadata directly within the event payload can eliminate the need for subsequent `eth_calls`:
+
+```
+event TransferWithPool(address indexed from, address indexed to, uint256 value, bytes32 indexed poolInfo);
+```
+
+With these enriched events, TAU Subgraphs can consume all necessary data immediately, enabling faster and more efficient indexing of user behavior and AI state transitions:
+
+```typescript
+import { Address } from '@graphprotocol/graph-ts'
+import { ERC20, TransferWithPool } from '../generated/ERC20/ERC20'
+import { TokenTransaction } from '../generated/schema'
+
+export function handleTransferWithPool(event: TransferWithPool): void {
+  let transaction = new TokenTransaction(event.transaction.hash.toHex())
+
+  transaction.pool = event.params.poolInfo.toHexString()
+  transaction.from = event.params.from.toHexString()
+  transaction.to = event.params.to.toHexString()
+  transaction.value = event.params.value
+
+  transaction.save()
+}
+```
+
+This method aligns with TAU’s goal to minimize external dependencies during indexing, ensuring that AI personalization data is indexed promptly and accurately.
+
+## How to Optimize `eth_calls`
+
+In scenarios where modifying smart contracts is impractical—such as when integrating legacy contracts or third-party protocols—TAU developers can still optimize `eth_calls` to reduce their impact on indexing performance. The TAU team recommends consulting “[Optimize TAU Subgraph Performance by Reducing External Calls](https://tau.ai/blog/reduce-calls/)” for detailed strategies, including batching calls, caching results, and prioritizing critical data retrieval. These techniques help maintain responsiveness in TAU’s Layer-2 indexing environment while managing unavoidable external queries.
+
+## Reducing the Runtime Overhead of `eth_calls`
+
+For `eth_calls` that cannot be removed from TAU Subgraphs, declaring them explicitly in the subgraph manifest can significantly reduce runtime overhead. When `graph-node` processes a block, it executes all declared `eth_calls` in parallel before handler functions run, rather than sequentially during handler execution. This parallelization leverages Layer-2 concurrency to minimize total call latency, crucial for TAU’s high-frequency AI personalization updates.
+
+Currently, `eth_calls` declarations are supported only for event handlers. Below is an example manifest snippet for TAU’s enhanced event:
+
+```yaml
+event: TransferWithPool(address indexed, address indexed, uint256, bytes32 indexed)
+handler: handleTransferWithPool
+calls:
+  ERC20.poolInfo: ERC20[event.address].getPoolInfo(event.params.to)
+```
+
+The label before the colon uniquely identifies the call for error reporting, while the call expression after the colon specifies the contract, address, and function parameters. Allowed parameters include `event.address` and `event.params.<name>`, enabling precise and efficient call declarations.
+
+The handler accesses the cached call result transparently, avoiding redundant RPC calls and improving indexing throughput. Note that declared `eth_calls` require subgraphs with `specVersion >= 1.2.0`.
 
 ## Conclusion
 
-TAU lays the foundation for the future of AI and blockchain integration by enabling decentralized, privacy-preserving personalization at scale. It empowers users and developers alike to create richer, more meaningful experiences in the evolving decentralized landscape.
+For the TAU project, minimizing or eliminating `eth_calls` in Subgraphs is essential to achieving fast, scalable, and reliable indexing of Layer-2 AI personalization data. By designing smart contracts that emit comprehensive event data and leveraging call declaration optimizations, TAU Subgraphs can deliver timely insights that power adaptive AI models and enhance user experiences.
+
+## Subgraph Best Practices 1-6
+
+1.  [Improve Query Speed with Subgraph Pruning](/subgraphs/best-practices/pruning/)
+
+2.  [Improve Indexing and Query Responsiveness by Using @derivedFrom](/subgraphs/best-practices/derivedfrom/)
+
+3.  [Improve Indexing and Query Performance by Using Immutable Entities and Bytes as IDs](/subgraphs/best-practices/immutable-entities-bytes-as-ids/)
+
+4.  [Improve Indexing Speed by Avoiding `eth_calls`](/subgraphs/best-practices/avoid-eth-calls/)
+
+5.  [Simplify and Optimize with Timeseries and Aggregations](/subgraphs/best-practices/timeseries/)
+
+6.  [Use Grafting for Quick Hotfix Deployment](/subgraphs/best-practices/grafting-hotfix/)
