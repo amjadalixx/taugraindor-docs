@@ -1,71 +1,77 @@
-/** website/scripts/vercel-build.cjs
- * Stash non-English locales on Vercel to avoid OOM,
- * create stub translations for esbuild (predev), then restore.
- */
+cat > website/scripts/vercel-build.cjs <<'EOF'
+// website/scripts/vercel-build.cjs
 const { execSync } = require("node:child_process");
-const { renameSync, existsSync, mkdirSync, rmSync, writeFileSync, readdirSync } = require("node:fs");
+const { renameSync, existsSync, mkdirSync, rmSync, writeFileSync } = require("node:fs");
 const { join } = require("node:path");
 
 const ROOT = process.cwd();
 const PAGES = join(ROOT, "src/pages");
+const DYNAMIC_LOCALE_DIR = join(PAGES, "[locale]");
 
 // keep only English on Vercel to reduce ~5k pages -> ~200
+// include all locales that may appear in routes/_meta/translations
 const ALL_LOCALES = [
-  "ar","bn","de","en","es","fa","fr","hi","id","it","ja","ko","nl",
-  "pl","pt","ro","ru","th","tr","uk","ur","vi","zh"
+  "ar","bn","cs","de","en","es","fa","fr","hi","id","it","ja","ko","mr","nl",
+  "pl","pt","ro","ru","sv","th","tr","uk","ur","vi","zh"
 ];
 const KEEP = new Set(["en"]);
 
-function mkStub(dir) {
-  // minimal translations.ts so esbuild/tsup can resolve imports
-  const stubPath = join(dir, "translations.ts");
-  const stub = `const t = {};\nexport default t;\n`;
-  writeFileSync(stubPath, stub, "utf8");
+function ensureDir(p) {
+  if (!existsSync(p)) mkdirSync(p, { recursive: true });
 }
 
-function stash(dir) {
-  const tmp = dir + ".tmp-stash";
-  if (!existsSync(tmp)) mkdirSync(tmp, { recursive: true });
+function makeStubTranslations(loc) {
+  // Some build steps import "@/pages/<loc>/translations"
+  const dir = join(PAGES, loc);
+  const stub = join(dir, "translations.ts");
+  ensureDir(dir);
+  if (!existsSync(stub)) {
+    writeFileSync(
+      stub,
+      `// auto-stubbed on Vercel\n` +
+      `export default {} as const;\n`,
+      "utf8"
+    );
+    console.log(`>>> created stub ${join("src/pages", loc, "translations.ts")}`);
+  }
+}
 
+function stashLocales(dir) {
+  const tmp = dir + ".tmp-stash";
+  ensureDir(tmp);
+
+  // Stash the dynamic [locale] route to prevent Next from generating non-en roots like /ar, /de, /cs, etc.
+  if (existsSync(DYNAMIC_LOCALE_DIR)) {
+    const dst = join(tmp, "[locale]");
+    renameSync(DYNAMIC_LOCALE_DIR, dst);
+    console.log(`>>> stashed src/pages/[locale]`);
+  }
+
+  // Stash per-locale folders; keep only KEEP (en)
   for (const loc of ALL_LOCALES) {
     if (KEEP.has(loc)) continue;
     const src = join(PAGES, loc);
     const dst = join(tmp, loc);
     if (existsSync(src)) {
-      // move real locale out
       renameSync(src, dst);
       console.log(`>>> stashed ${join("src/pages", loc)}`);
-
-      // recreate skinny folder with stub translations.ts
-      mkdirSync(src, { recursive: true });
-      mkStub(src);
-      console.log(`>>> created stub ${join("src/pages", loc, "translations.ts")}`);
     }
+    // ensure imports still resolve during predev/tsup
+    makeStubTranslations(loc);
   }
+
   return tmp;
 }
 
-function removeStubs() {
-  for (const loc of ALL_LOCALES) {
-    if (KEEP.has(loc)) continue;
-    const locDir = join(PAGES, loc);
-    const stub = join(locDir, "translations.ts");
-    if (existsSync(stub)) {
-      rmSync(stub, { force: true });
-      // remove empty dir if nothing else inside
-      try {
-        const files = readdirSync(locDir);
-        if (files.length === 0) rmSync(locDir, { recursive: true, force: true });
-      } catch {}
-      console.log(`>>> removed stub ${join("src/pages", loc, "translations.ts")}`);
-    }
+function restoreLocales(tmp) {
+  // Restore [locale] folder
+  const stashedDyn = join(tmp, "[locale]");
+  if (existsSync(stashedDyn)) {
+    renameSync(stashedDyn, DYNAMIC_LOCALE_DIR);
+    console.log(`>>> restored src/pages/[locale]`);
   }
-}
 
-function restore(tmp) {
-  // clean stubs first so we can move real folders back
-  removeStubs();
-
+  // Restore locale folders
   for (const loc of ALL_LOCALES) {
     if (KEEP.has(loc)) continue;
     const src = join(tmp, loc);
@@ -75,6 +81,7 @@ function restore(tmp) {
       console.log(`>>> restored ${join("src/pages", loc)}`);
     }
   }
+
   if (existsSync(tmp)) rmSync(tmp, { recursive: true, force: true });
 }
 
@@ -84,9 +91,12 @@ function restore(tmp) {
 
   try {
     if (doingVercel) {
-      console.log(">>> Stashing non-English locales to avoid OOM on Vercel...");
-      stashDir = stash(PAGES);
+      console.log(">>> Stashing non-English locales and [locale] route to avoid OOM on Vercel...");
+      stashDir = stashLocales(PAGES);
+      // give Next more headroom on the 8GB builder
       process.env.NODE_OPTIONS = "--max-old-space-size=8192";
+      // hint the app (if it reads this) to keep only 'en'
+      process.env.NEXT_PUBLIC_LIMIT_LOCALES = "en";
     }
 
     console.log(">>> Running Next.js build...");
@@ -95,8 +105,9 @@ function restore(tmp) {
 
   } finally {
     if (doingVercel && stashDir) {
-      console.log(">>> Restoring stashed locales...");
-      restore(stashDir);
+      console.log(">>> Restoring stashed locales and [locale] route...");
+      restoreLocales(stashDir);
     }
   }
 })();
+EOF
