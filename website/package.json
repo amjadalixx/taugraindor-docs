@@ -9,13 +9,13 @@
     "build": "NODE_OPTIONS='--max-old-space-size=8192' rm -rf .next && rm -rf out && next build",
     "prebuild": "pnpm predev",
     "prebuild:ci": "pnpm fetch-remote-docs && pnpm fetch-api-reference && pnpm fix-pages-structure",
-    "postbuild": "next-sitemap --config next-sitemap.config.mjs && node scripts/sitemap-ci.js",
+    "postbuild": "if [ \"$VERCEL\" != \"1\" ]; then next-sitemap --config next-sitemap.config.mjs && node scripts/sitemap-ci.js; fi",
     "typecheck": "tsc",
     "fetch-remote-docs": "tsx scripts/fetch-remote-docs.ts",
     "fetch-api-reference": "tsx scripts/fetch-api-reference.ts",
     "fix-pages-structure": "tsx scripts/fix-pages-structure.ts",
     "move-pages": "tsx scripts/move-pages.ts",
-    "vercel-build": "node scripts/vercel-build.js"
+    "vercel-build": "node scripts/vercel-build.cjs"
   },
   "dependencies": {
     "@docsearch/react": "^3.9.0",
