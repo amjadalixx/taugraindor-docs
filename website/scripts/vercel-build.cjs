@@ -1,3 +1,4 @@
+cat > website/scripts/vercel-build.cjs <<'EOF'
 // website/scripts/vercel-build.cjs
 const { execSync } = require("node:child_process");
 const { renameSync, existsSync, mkdirSync, rmSync, writeFileSync } = require("node:fs");
@@ -27,7 +28,8 @@ function makeStubTranslations(loc) {
   if (!existsSync(stub)) {
     writeFileSync(
       stub,
-      `// auto-stubbed on Vercel\nexport default {} as const;\n`,
+      `// auto-stubbed on Vercel\n` +
+      `export default {} as const;\n`,
       "utf8"
     );
     console.log(`>>> created stub ${join("src/pages", loc, "translations.ts")}`);
@@ -38,7 +40,7 @@ function stashLocales(dir) {
   const tmp = dir + ".tmp-stash";
   ensureDir(tmp);
 
-  // Stash the dynamic [locale] route so Next doesn't try to build non-en roots.
+  // Stash the dynamic [locale] route to prevent Next from generating non-en roots like /ar, /de, /cs, etc.
   if (existsSync(DYNAMIC_LOCALE_DIR)) {
     const dst = join(tmp, "[locale]");
     renameSync(DYNAMIC_LOCALE_DIR, dst);
@@ -91,7 +93,9 @@ function restoreLocales(tmp) {
     if (doingVercel) {
       console.log(">>> Stashing non-English locales and [locale] route to avoid OOM on Vercel...");
       stashDir = stashLocales(PAGES);
+      // give Next more headroom on the 8GB builder
       process.env.NODE_OPTIONS = "--max-old-space-size=8192";
+      // hint the app (if it reads this) to keep only 'en'
       process.env.NEXT_PUBLIC_LIMIT_LOCALES = "en";
     }
 
@@ -106,3 +110,4 @@ function restoreLocales(tmp) {
     }
   }
 })();
+EOF
