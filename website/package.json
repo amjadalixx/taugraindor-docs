@@ -1,73 +1,110 @@
-{
-  "name": "@graphprotocol/docs",
-  "private": true,
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "next",
-    "predev": "tsup ./src/i18n.ts ./src/mdxPlugins/*.ts --format esm",
-    "build": "NODE_OPTIONS='--max-old-space-size=8192' rm -rf .next && rm -rf out && next build",
-    "prebuild": "pnpm predev",
-    "prebuild:ci": "pnpm fetch-remote-docs && pnpm fetch-api-reference && pnpm fix-pages-structure",
-    "postbuild": "if [ \"$VERCEL\" != \"1\" ]; then next-sitemap --config next-sitemap.config.mjs && node scripts/sitemap-ci.js; fi",
-    "typecheck": "tsc",
-    "fetch-remote-docs": "tsx scripts/fetch-remote-docs.ts",
-    "fetch-api-reference": "tsx scripts/fetch-api-reference.ts",
-    "fix-pages-structure": "tsx scripts/fix-pages-structure.ts",
-    "move-pages": "tsx scripts/move-pages.ts",
-    "vercel-build": "node scripts/vercel-build.cjs"
-  },
-  "dependencies": {
-    "@docsearch/react": "^3.9.0",
-    "@edgeandnode/common": "^7.0.4",
-    "@edgeandnode/gds": "^6.7.3",
-    "@edgeandnode/go": "^10.3.4",
-    "@emotion/react": "^11.14.0",
-    "@graphprotocol/contracts": "^7.3.0",
-    "@pinax/graph-networks-registry": "^0.7.1",
-    "@react-hookz/web": "^25.1.1",
-    "@readme/httpsnippet": "^11.0.0",
-    "@readme/openapi-parser": "^4.1.2",
-    "fetch-har": "^11.1.1",
-    "hast": "^1.0.0",
-    "hast-util-whitespace": "^3.0.0",
-    "lodash": "^4.17.21",
-    "mdast-util-mdx-jsx": "^3.2.0",
-    "mdast-util-to-hast": "^13.2.0",
-    "mixpanel-browser": "^2.67.0",
-    "motion": "^12.23.12",
-    "next": "^14.2.31",
-    "next-seo": "^6.8.0",
-    "next-sitemap": "^4.2.3",
-    "nextra": "^3.3.1",
-    "openapi-types": "^12.1.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-ga4": "^2.1.0",
-    "react-intersection-observer": "^9.16.0",
-    "rehype-mdx-code-props": "^3.0.1",
-    "theme-ui": "^0.17.2",
-    "unist-util-visit": "^5.0.0",
-    "vfile": "^6.0.3",
-    "zod": "^3.25.76"
-  },
-  "devDependencies": {
-    "@types/hast": "^3.0.4",
-    "@types/lodash": "^4.17.20",
-    "@types/mdast": "^4.0.4",
-    "@types/mixpanel-browser": "^2.66.0",
-    "@types/node": "^22.17.0",
-    "@types/react": "^18.3.23",
-    "@types/react-dom": "^18.3.7",
-    "@types/vfile": "^4.0.0",
-    "autoprefixer": "^10.4.21",
-    "fast-xml-parser": "^5.2.5",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.17",
-    "tsup": "^8.5.0",
-    "tsx": "^4.20.3"
-  },
-  "engines": {
-    "node": "20.x"
+const { execSync } = require("node:child_process");
+const { renameSync, existsSync, mkdirSync, rmSync, writeFileSync } = require("node:fs");
+const { join } = require("node:path");
+
+const ROOT = process.cwd();
+const PAGES = join(ROOT, "src/pages");
+const DYNAMIC_LOCALE_DIR = join(PAGES, "[locale]");
+
+// keep only English on Vercel to reduce ~5k pages -> ~200
+// include all locales that may appear in routes/_meta/translations
+const ALL_LOCALES = [
+  "ar","bn","cs","de","en","es","fa","fr","hi","id","it","ja","ko","mr","nl",
+  "pl","pt","ro","ru","sv","th","tr","uk","ur","vi","zh"
+];
+const KEEP = new Set(["en"]);
+
+function ensureDir(p) {
+  if (!existsSync(p)) mkdirSync(p, { recursive: true });
+}
+
+function makeStubTranslations(loc) {
+  // Some build steps import "@/pages/<loc>/translations"
+  const dir = join(PAGES, loc);
+  const stub = join(dir, "translations.ts");
+  ensureDir(dir);
+  if (!existsSync(stub)) {
+    writeFileSync(
+      stub,
+      `// auto-stubbed on Vercel\n` +
+      `export default {} as const;\n`,
+      "utf8"
+    );
+    console.log(`>>> created stub ${join("src/pages", loc, "translations.ts")}`);
   }
 }
+
+function stashLocales(dir) {
+  const tmp = dir + ".tmp-stash";
+  ensureDir(tmp);
+
+  // Stash the dynamic [locale] route to prevent Next from generating non-en roots like /ar, /de, /cs, etc.
+  if (existsSync(DYNAMIC_LOCALE_DIR)) {
+    const dst = join(tmp, "[locale]");
+    renameSync(DYNAMIC_LOCALE_DIR, dst);
+    console.log(`>>> stashed src/pages/[locale]`);
+  }
+
+  // Stash per-locale folders; keep only KEEP (en)
+  for (const loc of ALL_LOCALES) {
+    if (KEEP.has(loc)) continue;
+    const src = join(PAGES, loc);
+    const dst = join(tmp, loc);
+    if (existsSync(src)) {
+      renameSync(src, dst);
+      console.log(`>>> stashed ${join("src/pages", loc)}`);
+    }
+    // ensure imports still resolve during predev/tsup
+    makeStubTranslations(loc);
+  }
+
+  return tmp;
+}
+
+function restoreLocales(tmp) {
+  // Restore [locale] folder
+  const stashedDyn = join(tmp, "[locale]");
+  if (existsSync(stashedDyn)) {
+    renameSync(stashedDyn, DYNAMIC_LOCALE_DIR);
+    console.log(`>>> restored src/pages/[locale]`);
+  }
+
+  // Restore locale folders
+  for (const loc of ALL_LOCALES) {
+    if (KEEP.has(loc)) continue;
+    const src = join(tmp, loc);
+    const dst = join(PAGES, loc);
+    if (existsSync(src)) {
+      renameSync(src, dst);
+      console.log(`>>> restored ${join("src/pages", loc)}`);
+    }
+  }
+
+  if (existsSync(tmp)) rmSync(tmp, { recursive: true, force: true });
+}
+
+(async () => {
+  const doingVercel = process.env.VERCEL === "1";
+  let stashDir = null;
+
+  try {
+    if (doingVercel) {
+      console.log(">>> Stashing non-English locales and [locale] route to avoid OOM on Vercel...");
+      stashDir = stashLocales(PAGES);
+      // give Next more headroom on the 8GB builder
+      process.env.NODE_OPTIONS = "--max-old-space-size=8192";
+      // hint the app (if it reads this) to keep only 'en'
+      process.env.NEXT_PUBLIC_LIMIT_LOCALES = "en";
+    }
+
+    console.log(">>> Running Next.js build...");
+    execSync("pnpm predev", { stdio: "inherit" });
+    execSync("next build", { stdio: "inherit" });
+
+  } finally {
+    if (doingVercel && stashDir) {
+      console.log(">>> Restoring stashed locales and [locale] route...");
+      restoreLocales(stashDir);
+    }
+  }
+})();
