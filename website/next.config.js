@@ -115,10 +115,6 @@ const withNextra = nextra({
 
 /** @type {import('next').NextConfig} */
 export default withNextra({
-  eslint: { ignoreDuringBuilds: true },
-  typescript: { ignoreBuildErrors: true },
-  swcMinify: false,
-  productionBrowserSourceMaps: false,
   env,
   output: 'export',
   distDir: process.env.NODE_ENV === 'production' ? '../out/docs' : undefined,

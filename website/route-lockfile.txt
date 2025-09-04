@@ -108,7 +108,6 @@
 /ar/supported-networks/aurora-testnet/
 /ar/supported-networks/aurora/
 /ar/supported-networks/autonomys-taurus/
-/ar/supported-networks/autonomys/
 /ar/supported-networks/avalanche/
 /ar/supported-networks/base-sepolia/
 /ar/supported-networks/base/
@@ -126,7 +125,6 @@
 /ar/supported-networks/bsc/
 /ar/supported-networks/btc/
 /ar/supported-networks/celo-alfajores/
-/ar/supported-networks/celo-sepolia/
 /ar/supported-networks/celo/
 /ar/supported-networks/chapel/
 /ar/supported-networks/chiliz-testnet/
@@ -155,6 +153,7 @@
 /ar/supported-networks/hashkeychain/
 /ar/supported-networks/hemi-sepolia/
 /ar/supported-networks/hemi/
+/ar/supported-networks/holesky-cl/
 /ar/supported-networks/holesky/
 /ar/supported-networks/hoodi-cl/
 /ar/supported-networks/hoodi/
@@ -381,7 +380,6 @@
 /cs/supported-networks/aurora-testnet/
 /cs/supported-networks/aurora/
 /cs/supported-networks/autonomys-taurus/
-/cs/supported-networks/autonomys/
 /cs/supported-networks/avalanche/
 /cs/supported-networks/base-sepolia/
 /cs/supported-networks/base/
@@ -399,7 +397,6 @@
 /cs/supported-networks/bsc/
 /cs/supported-networks/btc/
 /cs/supported-networks/celo-alfajores/
-/cs/supported-networks/celo-sepolia/
 /cs/supported-networks/celo/
 /cs/supported-networks/chapel/
 /cs/supported-networks/chiliz-testnet/
@@ -428,6 +425,7 @@
 /cs/supported-networks/hashkeychain/
 /cs/supported-networks/hemi-sepolia/
 /cs/supported-networks/hemi/
+/cs/supported-networks/holesky-cl/
 /cs/supported-networks/holesky/
 /cs/supported-networks/hoodi-cl/
 /cs/supported-networks/hoodi/
@@ -654,7 +652,6 @@
 /de/supported-networks/aurora-testnet/
 /de/supported-networks/aurora/
 /de/supported-networks/autonomys-taurus/
-/de/supported-networks/autonomys/
 /de/supported-networks/avalanche/
 /de/supported-networks/base-sepolia/
 /de/supported-networks/base/
@@ -672,7 +669,6 @@
 /de/supported-networks/bsc/
 /de/supported-networks/btc/
 /de/supported-networks/celo-alfajores/
-/de/supported-networks/celo-sepolia/
 /de/supported-networks/celo/
 /de/supported-networks/chapel/
 /de/supported-networks/chiliz-testnet/
@@ -701,6 +697,7 @@
 /de/supported-networks/hashkeychain/
 /de/supported-networks/hemi-sepolia/
 /de/supported-networks/hemi/
+/de/supported-networks/holesky-cl/
 /de/supported-networks/holesky/
 /de/supported-networks/hoodi-cl/
 /de/supported-networks/hoodi/
@@ -927,7 +924,6 @@
 /en/supported-networks/aurora-testnet/
 /en/supported-networks/aurora/
 /en/supported-networks/autonomys-taurus/
-/en/supported-networks/autonomys/
 /en/supported-networks/avalanche/
 /en/supported-networks/base-sepolia/
 /en/supported-networks/base/
@@ -945,7 +941,6 @@
 /en/supported-networks/bsc/
 /en/supported-networks/btc/
 /en/supported-networks/celo-alfajores/
-/en/supported-networks/celo-sepolia/
 /en/supported-networks/celo/
 /en/supported-networks/chapel/
 /en/supported-networks/chiliz-testnet/
@@ -974,6 +969,7 @@
 /en/supported-networks/hashkeychain/
 /en/supported-networks/hemi-sepolia/
 /en/supported-networks/hemi/
+/en/supported-networks/holesky-cl/
 /en/supported-networks/holesky/
 /en/supported-networks/hoodi-cl/
 /en/supported-networks/hoodi/
@@ -1200,7 +1196,6 @@
 /es/supported-networks/aurora-testnet/
 /es/supported-networks/aurora/
 /es/supported-networks/autonomys-taurus/
-/es/supported-networks/autonomys/
 /es/supported-networks/avalanche/
 /es/supported-networks/base-sepolia/
 /es/supported-networks/base/
@@ -1218,7 +1213,6 @@
 /es/supported-networks/bsc/
 /es/supported-networks/btc/
 /es/supported-networks/celo-alfajores/
-/es/supported-networks/celo-sepolia/
 /es/supported-networks/celo/
 /es/supported-networks/chapel/
 /es/supported-networks/chiliz-testnet/
@@ -1247,6 +1241,7 @@
 /es/supported-networks/hashkeychain/
 /es/supported-networks/hemi-sepolia/
 /es/supported-networks/hemi/
+/es/supported-networks/holesky-cl/
 /es/supported-networks/holesky/
 /es/supported-networks/hoodi-cl/
 /es/supported-networks/hoodi/
@@ -1473,7 +1468,6 @@
 /fr/supported-networks/aurora-testnet/
 /fr/supported-networks/aurora/
 /fr/supported-networks/autonomys-taurus/
-/fr/supported-networks/autonomys/
 /fr/supported-networks/avalanche/
 /fr/supported-networks/base-sepolia/
 /fr/supported-networks/base/
@@ -1491,7 +1485,6 @@
 /fr/supported-networks/bsc/
 /fr/supported-networks/btc/
 /fr/supported-networks/celo-alfajores/
-/fr/supported-networks/celo-sepolia/
 /fr/supported-networks/celo/
 /fr/supported-networks/chapel/
 /fr/supported-networks/chiliz-testnet/
@@ -1520,6 +1513,7 @@
 /fr/supported-networks/hashkeychain/
 /fr/supported-networks/hemi-sepolia/
 /fr/supported-networks/hemi/
+/fr/supported-networks/holesky-cl/
 /fr/supported-networks/holesky/
 /fr/supported-networks/hoodi-cl/
 /fr/supported-networks/hoodi/
@@ -1746,7 +1740,6 @@
 /hi/supported-networks/aurora-testnet/
 /hi/supported-networks/aurora/
 /hi/supported-networks/autonomys-taurus/
-/hi/supported-networks/autonomys/
 /hi/supported-networks/avalanche/
 /hi/supported-networks/base-sepolia/
 /hi/supported-networks/base/
@@ -1764,7 +1757,6 @@
 /hi/supported-networks/bsc/
 /hi/supported-networks/btc/
 /hi/supported-networks/celo-alfajores/
-/hi/supported-networks/celo-sepolia/
 /hi/supported-networks/celo/
 /hi/supported-networks/chapel/
 /hi/supported-networks/chiliz-testnet/
@@ -1793,6 +1785,7 @@
 /hi/supported-networks/hashkeychain/
 /hi/supported-networks/hemi-sepolia/
 /hi/supported-networks/hemi/
+/hi/supported-networks/holesky-cl/
 /hi/supported-networks/holesky/
 /hi/supported-networks/hoodi-cl/
 /hi/supported-networks/hoodi/
@@ -2019,7 +2012,6 @@
 /it/supported-networks/aurora-testnet/
 /it/supported-networks/aurora/
 /it/supported-networks/autonomys-taurus/
-/it/supported-networks/autonomys/
 /it/supported-networks/avalanche/
 /it/supported-networks/base-sepolia/
 /it/supported-networks/base/
@@ -2037,7 +2029,6 @@
 /it/supported-networks/bsc/
 /it/supported-networks/btc/
 /it/supported-networks/celo-alfajores/
-/it/supported-networks/celo-sepolia/
 /it/supported-networks/celo/
 /it/supported-networks/chapel/
 /it/supported-networks/chiliz-testnet/
@@ -2066,6 +2057,7 @@
 /it/supported-networks/hashkeychain/
 /it/supported-networks/hemi-sepolia/
 /it/supported-networks/hemi/
+/it/supported-networks/holesky-cl/
 /it/supported-networks/holesky/
 /it/supported-networks/hoodi-cl/
 /it/supported-networks/hoodi/
@@ -2292,7 +2284,6 @@
 /ja/supported-networks/aurora-testnet/
 /ja/supported-networks/aurora/
 /ja/supported-networks/autonomys-taurus/
-/ja/supported-networks/autonomys/
 /ja/supported-networks/avalanche/
 /ja/supported-networks/base-sepolia/
 /ja/supported-networks/base/
@@ -2310,7 +2301,6 @@
 /ja/supported-networks/bsc/
 /ja/supported-networks/btc/
 /ja/supported-networks/celo-alfajores/
-/ja/supported-networks/celo-sepolia/
 /ja/supported-networks/celo/
 /ja/supported-networks/chapel/
 /ja/supported-networks/chiliz-testnet/
@@ -2339,6 +2329,7 @@
 /ja/supported-networks/hashkeychain/
 /ja/supported-networks/hemi-sepolia/
 /ja/supported-networks/hemi/
+/ja/supported-networks/holesky-cl/
 /ja/supported-networks/holesky/
 /ja/supported-networks/hoodi-cl/
 /ja/supported-networks/hoodi/
@@ -2684,7 +2675,6 @@
 /mr/supported-networks/aurora-testnet/
 /mr/supported-networks/aurora/
 /mr/supported-networks/autonomys-taurus/
-/mr/supported-networks/autonomys/
 /mr/supported-networks/avalanche/
 /mr/supported-networks/base-sepolia/
 /mr/supported-networks/base/
@@ -2702,7 +2692,6 @@
 /mr/supported-networks/bsc/
 /mr/supported-networks/btc/
 /mr/supported-networks/celo-alfajores/
-/mr/supported-networks/celo-sepolia/
 /mr/supported-networks/celo/
 /mr/supported-networks/chapel/
 /mr/supported-networks/chiliz-testnet/
@@ -2731,6 +2720,7 @@
 /mr/supported-networks/hashkeychain/
 /mr/supported-networks/hemi-sepolia/
 /mr/supported-networks/hemi/
+/mr/supported-networks/holesky-cl/
 /mr/supported-networks/holesky/
 /mr/supported-networks/hoodi-cl/
 /mr/supported-networks/hoodi/
@@ -3195,7 +3185,6 @@
 /pt/supported-networks/aurora-testnet/
 /pt/supported-networks/aurora/
 /pt/supported-networks/autonomys-taurus/
-/pt/supported-networks/autonomys/
 /pt/supported-networks/avalanche/
 /pt/supported-networks/base-sepolia/
 /pt/supported-networks/base/
@@ -3213,7 +3202,6 @@
 /pt/supported-networks/bsc/
 /pt/supported-networks/btc/
 /pt/supported-networks/celo-alfajores/
-/pt/supported-networks/celo-sepolia/
 /pt/supported-networks/celo/
 /pt/supported-networks/chapel/
 /pt/supported-networks/chiliz-testnet/
@@ -3242,6 +3230,7 @@
 /pt/supported-networks/hashkeychain/
 /pt/supported-networks/hemi-sepolia/
 /pt/supported-networks/hemi/
+/pt/supported-networks/holesky-cl/
 /pt/supported-networks/holesky/
 /pt/supported-networks/hoodi-cl/
 /pt/supported-networks/hoodi/
@@ -3587,7 +3576,6 @@
 /ru/supported-networks/aurora-testnet/
 /ru/supported-networks/aurora/
 /ru/supported-networks/autonomys-taurus/
-/ru/supported-networks/autonomys/
 /ru/supported-networks/avalanche/
 /ru/supported-networks/base-sepolia/
 /ru/supported-networks/base/
@@ -3605,7 +3593,6 @@
 /ru/supported-networks/bsc/
 /ru/supported-networks/btc/
 /ru/supported-networks/celo-alfajores/
-/ru/supported-networks/celo-sepolia/
 /ru/supported-networks/celo/
 /ru/supported-networks/chapel/
 /ru/supported-networks/chiliz-testnet/
@@ -3634,6 +3621,7 @@
 /ru/supported-networks/hashkeychain/
 /ru/supported-networks/hemi-sepolia/
 /ru/supported-networks/hemi/
+/ru/supported-networks/holesky-cl/
 /ru/supported-networks/holesky/
 /ru/supported-networks/hoodi-cl/
 /ru/supported-networks/hoodi/
@@ -3860,7 +3848,6 @@
 /sv/supported-networks/aurora-testnet/
 /sv/supported-networks/aurora/
 /sv/supported-networks/autonomys-taurus/
-/sv/supported-networks/autonomys/
 /sv/supported-networks/avalanche/
 /sv/supported-networks/base-sepolia/
 /sv/supported-networks/base/
@@ -3878,7 +3865,6 @@
 /sv/supported-networks/bsc/
 /sv/supported-networks/btc/
 /sv/supported-networks/celo-alfajores/
-/sv/supported-networks/celo-sepolia/
 /sv/supported-networks/celo/
 /sv/supported-networks/chapel/
 /sv/supported-networks/chiliz-testnet/
@@ -3907,6 +3893,7 @@
 /sv/supported-networks/hashkeychain/
 /sv/supported-networks/hemi-sepolia/
 /sv/supported-networks/hemi/
+/sv/supported-networks/holesky-cl/
 /sv/supported-networks/holesky/
 /sv/supported-networks/hoodi-cl/
 /sv/supported-networks/hoodi/
@@ -4133,7 +4120,6 @@
 /tr/supported-networks/aurora-testnet/
 /tr/supported-networks/aurora/
 /tr/supported-networks/autonomys-taurus/
-/tr/supported-networks/autonomys/
 /tr/supported-networks/avalanche/
 /tr/supported-networks/base-sepolia/
 /tr/supported-networks/base/
@@ -4151,7 +4137,6 @@
 /tr/supported-networks/bsc/
 /tr/supported-networks/btc/
 /tr/supported-networks/celo-alfajores/
-/tr/supported-networks/celo-sepolia/
 /tr/supported-networks/celo/
 /tr/supported-networks/chapel/
 /tr/supported-networks/chiliz-testnet/
@@ -4180,6 +4165,7 @@
 /tr/supported-networks/hashkeychain/
 /tr/supported-networks/hemi-sepolia/
 /tr/supported-networks/hemi/
+/tr/supported-networks/holesky-cl/
 /tr/supported-networks/holesky/
 /tr/supported-networks/hoodi-cl/
 /tr/supported-networks/hoodi/
@@ -4525,7 +4511,6 @@
 /ur/supported-networks/aurora-testnet/
 /ur/supported-networks/aurora/
 /ur/supported-networks/autonomys-taurus/
-/ur/supported-networks/autonomys/
 /ur/supported-networks/avalanche/
 /ur/supported-networks/base-sepolia/
 /ur/supported-networks/base/
@@ -4543,7 +4528,6 @@
 /ur/supported-networks/bsc/
 /ur/supported-networks/btc/
 /ur/supported-networks/celo-alfajores/
-/ur/supported-networks/celo-sepolia/
 /ur/supported-networks/celo/
 /ur/supported-networks/chapel/
 /ur/supported-networks/chiliz-testnet/
@@ -4572,6 +4556,7 @@
 /ur/supported-networks/hashkeychain/
 /ur/supported-networks/hemi-sepolia/
 /ur/supported-networks/hemi/
+/ur/supported-networks/holesky-cl/
 /ur/supported-networks/holesky/
 /ur/supported-networks/hoodi-cl/
 /ur/supported-networks/hoodi/
@@ -4917,7 +4902,6 @@
 /zh/supported-networks/aurora-testnet/
 /zh/supported-networks/aurora/
 /zh/supported-networks/autonomys-taurus/
-/zh/supported-networks/autonomys/
 /zh/supported-networks/avalanche/
 /zh/supported-networks/base-sepolia/
 /zh/supported-networks/base/
@@ -4933,7 +4917,6 @@
 /zh/supported-networks/bsc/
 /zh/supported-networks/btc/
 /zh/supported-networks/celo-alfajores/
-/zh/supported-networks/celo-sepolia/
 /zh/supported-networks/celo/
 /zh/supported-networks/chapel/
 /zh/supported-networks/chiliz-testnet/
@@ -4962,6 +4945,7 @@
 /zh/supported-networks/hashkeychain/
 /zh/supported-networks/hemi-sepolia/
 /zh/supported-networks/hemi/
+/zh/supported-networks/holesky-cl/
 /zh/supported-networks/holesky/
 /zh/supported-networks/hoodi-cl/
 /zh/supported-networks/hoodi/
@@ -4970,10 +4954,26 @@
 /zh/supported-networks/injective-testnet/
 /zh/supported-networks/ink-sepolia/
 /zh/supported-networks/ink/
+/zh/supported-networks/iotex-testnet/
+/zh/supported-networks/iotex/
+/zh/supported-networks/joc-testnet/
+/zh/supported-networks/joc/
 /zh/supported-networks/jungle4/
+/zh/supported-networks/kaia-testnet/
+/zh/supported-networks/kaia/
+/zh/supported-networks/katana-tatara/
+/zh/supported-networks/katana/
 /zh/supported-networks/kylin/
+/zh/supported-networks/lens-testnet/
+/zh/supported-networks/lens/
+/zh/supported-networks/linea-sepolia/
+/zh/supported-networks/linea/
+/zh/supported-networks/litecoin/
+/zh/supported-networks/lumia/
 /zh/supported-networks/mainnet-cl/
 /zh/supported-networks/mainnet/
+/zh/supported-networks/manta/
+/zh/supported-networks/mantra-testnet/
 /zh/supported-networks/sepolia-cl/
 /zh/supported-networks/sepolia/
 /zh/token-api/evm/get-balances-evm-by-address/
