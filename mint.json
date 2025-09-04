@@ -1,0 +1,39 @@
+{
+  "name": "Taugraindor Docs",
+  "logo": "",
+  "navigation": [
+    {
+      "group": "Introduction",
+      "pages": ["website/src/pages/index.mdx"]
+    },
+    {
+      "group": "Core",
+      "pages": [
+        "website/src/pages/en/about.mdx",
+        "website/src/pages/en/contracts.mdx",
+        "website/src/pages/en/supported-networks.mdx"
+      ]
+    },
+    {
+      "group": "Subgraphs",
+      "pages": [
+        "website/src/pages/en/subgraphs/quick-start.mdx",
+        "website/src/pages/en/subgraphs/guides/subgraph-composition.mdx"
+      ]
+    },
+    {
+      "group": "Token API",
+      "pages": [
+        "website/src/pages/en/token-api/quick-start.mdx",
+        "website/src/pages/en/token-api/faq.mdx"
+      ]
+    },
+    {
+      "group": "Substreams",
+      "pages": [
+        "website/src/pages/en/substreams/introduction.mdx",
+        "website/src/pages/en/substreams/quick-start.mdx"
+      ]
+    }
+  ]
+}
