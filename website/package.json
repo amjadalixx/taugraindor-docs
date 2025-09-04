@@ -14,7 +14,8 @@
     "fetch-remote-docs": "tsx scripts/fetch-remote-docs.ts",
     "fetch-api-reference": "tsx scripts/fetch-api-reference.ts",
     "fix-pages-structure": "tsx scripts/fix-pages-structure.ts",
-    "move-pages": "tsx scripts/move-pages.ts"
+    "move-pages": "tsx scripts/move-pages.ts",
+    "vercel-build": "pnpm build"
   },
   "dependencies": {
     "@docsearch/react": "^3.9.0",
