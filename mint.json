@@ -1,10 +1,9 @@
 {
   "name": "Taugraindor Docs",
-  "logo": "https://raw.githubusercontent.com/amjadalixx/taugraindor-docs/main/website/public/logo.png",
-  "favicon": "https://raw.githubusercontent.com/amjadalixx/taugraindor-docs/main/website/public/favicon.ico",
+  "logo": "/website/public/logo.png",
+  "favicon": "/website/public/favicon.ico",
   "colors": {
-    "primary": "#4F46E5",
-    "secondary": "#06B6D4"
+    "primary": "#4F46E5"
   },
   "navigation": [
     {
