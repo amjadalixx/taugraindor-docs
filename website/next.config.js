@@ -2,6 +2,7 @@
 
 import nextra from 'nextra'
 import rehypeMdxCodeProps from 'rehype-mdx-code-props'
+import webpack from 'webpack'
 
 import { translate } from '@edgeandnode/gds'
 
@@ -25,10 +26,10 @@ const env = {
   GOOGLE_ANALYTICS_MEASUREMENT_ID: process.env.NODE_ENV === 'production' ? 'G-5MK48LFNKY' : '',
 }
 
-// Force a single locale to keep build small
+// Keep the build small: English only
 const ONLY_LOCALE = 'en'
 
-// sections we don't want to pre-render right now
+// Big sections to skip for now
 const EXCLUDED_PREFIXES = [
   'ai-suite',
   'substreams',
@@ -46,7 +47,7 @@ const withNextra = nextra({
   readingTime: true,
 
   transformPageMap(pageMap) {
-    // translation helper (always English for now)
+    // Always translate using English strings
     const t = (/** @type {string} */ key) =>
       translate(
         translations,
@@ -54,15 +55,12 @@ const withNextra = nextra({
         /** @type {any} */ (key),
       )
 
-    /** Recursively drop:
-     *  - any locale that is not `en`
-     *  - any /en/<section>/... where <section> is in EXCLUDED_PREFIXES
-     */
+    // Drop non-English routes and excluded top-level sections
     const filterItems = (items) =>
       items
         .filter((item) => {
           if (!('route' in item) || typeof item.route !== 'string') return true
-          const parts = item.route.split('/').filter(Boolean) // ["en","subgraphs",...]
+          const parts = item.route.split('/').filter(Boolean) // e.g. ["en","subgraphs", ...]
           const lang = parts[0]
           const section = parts[1] || ''
           if (lang && lang !== ONLY_LOCALE) return false
@@ -78,7 +76,7 @@ const withNextra = nextra({
 
     const filtered = filterItems(pageMap)
 
-    // Minimal sidebar to avoid linking to removed sections
+    // Minimal sidebar so we don’t link to removed sections
     const metaFile = {
       index: t('index.title'),
       about: '',
@@ -114,7 +112,7 @@ export default withNextra({
     // Fix scroll restoration (see https://github.com/vercel/next.js/issues/37893#issuecomment-1221335543)
     scrollRestoration: true,
   },
-  pageExtensions: ['tsx'],
+  pageExtensions: ['tsx'], // Nextra will handle MDX
   reactStrictMode: true,
   basePath: env.BASE_PATH,
   trailingSlash: true,
@@ -125,5 +123,16 @@ export default withNextra({
   i18n: {
     defaultLocale: ONLY_LOCALE,
     locales: [ONLY_LOCALE],
+  },
+  // 🔑 Hard-stop Webpack from including non-English page trees
+  webpack: (config) => {
+    // Ignore any MDX under src/pages/<non-en-locale>/** to prevent
+    // importing nextra-page-map-<locale>.mjs chunks.
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /src[\\/](pages|content)[\\/](ar|es|fa|ru|zh|ja|ko|pt|de|fr)([\\/].*)?\.mdx$/,
+      })
+    )
+    return config
   },
 })
