@@ -21,6 +21,7 @@ const heavy = [
   'src/pages/en/archived'
 ]
 
+// Safety: delete folders before build
 for (const rel of [...nonEn, ...heavy]) {
   const p = join(root, rel)
   if (existsSync(p)) {
@@ -30,3 +31,5 @@ for (const rel of [...nonEn, ...heavy]) {
     console.log(`[prune] skip (not found) ${rel}`)
   }
 }
+
+console.log('[prune] Completed cleanup: non-English and heavy sections removed.')
