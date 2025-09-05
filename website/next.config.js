@@ -3,7 +3,7 @@
 import nextra from 'nextra'
 import rehypeMdxCodeProps from 'rehype-mdx-code-props'
 
-import { defaultLocale as gdsDefaultLocale, translate } from '@edgeandnode/gds'
+import { defaultLocale, translate } from '@edgeandnode/gds'
 
 import { translations } from './dist/i18n.js'
 import rehypeUnwrapImages from './dist/mdxPlugins/rehypeUnwrapImages.js'
@@ -25,84 +25,88 @@ const env = {
   GOOGLE_ANALYTICS_MEASUREMENT_ID: process.env.NODE_ENV === 'production' ? 'G-5MK48LFNKY' : '',
 }
 
-// We’ll keep only English to reduce build size
-const ONLY_LOCALE = 'en'
-
 const withNextra = nextra({
   theme: './src/layout/Layout.tsx',
   search: false,
   codeHighlight: false,
   defaultShowCopyCode: false,
   readingTime: true,
-
   transformPageMap(pageMap) {
-    // Determine locale for meta labels
     const route = pageMap[0] && 'route' in pageMap[0] ? pageMap[0].route : undefined
-    const localeInRoute = typeof route === 'string' ? route.slice(1, 3) : gdsDefaultLocale
-    const locale = ONLY_LOCALE // force English for now
-
+    const locale = typeof route === 'string' ? route.slice(1, 3) : defaultLocale
     const t = (/** @type {string} */ key) =>
       translate(
         translations,
-        /** @type {import('@edgeandnode/gds').Locale} */ (locale),
-        /** @type {any} */ (key),
+        /** @type {import('@edgeandnode/gds').Locale} */
+        (locale),
+        /** @type {any} */
+        (key),
       )
 
-    // Exclude heavy top-level sections to shrink the number of pages generated.
-    // Top-level section is the second segment of the route: `/en/<section>/...`
-    const EXCLUDED_PREFIXES = [
-      'ai-suite',
-      'substreams',
-      'token-api',
-      'indexing',
-      'resources',
-      'archived',
-    ]
-
-    /** @param {any[]} items */
-    const filterItems = (items) =>
-      items
-        .filter((item) => {
-          // keep non-route nodes (like meta)
-          if (!('route' in item) || typeof item.route !== 'string') return true
-
-          const parts = item.route.split('/').filter(Boolean) // e.g., ["en","subgraphs","..."]
-          const section = parts[1] || ''
-          // also filter out any non-English routes
-          const lang = parts[0]
-          if (lang && lang !== ONLY_LOCALE) return false
-          return !EXCLUDED_PREFIXES.includes(section)
-        })
-        .map((item) => {
-          if ('children' in item && Array.isArray(item.children)) {
-            return { ...item, children: filterItems(item.children) }
-          }
-          return item
-        })
-
-    const filtered = filterItems(pageMap)
-
-    // Keep the nav minimal so we don't link to removed sections
+    // TODO: Move back to `src/pages/en/_meta.js` and add `src/pages/en/_meta-titles.json` for the translations
     const metaFile = {
       index: t('index.title'),
       about: '',
       'supported-networks': '',
       contracts: '',
-      '---1': { type: 'separator' },
-      subgraphs: { type: 'children', title: t('global.navigation.subgraphs') },
+      '---1': {
+        type: 'separator',
+      },
+      subgraphs: {
+        type: 'children',
+        title: t('global.navigation.subgraphs'),
+      },
+      '---2': {
+        type: 'separator',
+      },
+      substreams: {
+        type: 'children',
+        title: t('global.navigation.substreams'),
+      },
+      '---3': {
+        type: 'separator',
+      },
+      'token-api': {
+        type: 'children',
+        title: t('global.navigation.tokenApi'),
+      },
+      '---4': {
+        type: 'separator',
+      },
+      'ai-suite': {
+        type: 'children',
+        title: t('global.navigation.ai-suite'),
+      },
+      '---5': {
+        type: 'separator',
+      },
+      indexing: {
+        type: 'children',
+        title: t('global.navigation.indexing'),
+      },
+      '---6': {
+        type: 'separator',
+      },
+      resources: {
+        type: 'children',
+        title: t('global.navigation.resources'),
+      },
+      archived: {
+        type: 'children',
+        title: t('global.navigation.archived'),
+      },
     }
 
     return [
       { data: metaFile },
       {
-        route: `/${ONLY_LOCALE}`,
+        route: `/${locale}`,
         name: 'index',
         frontMatter: {},
       },
-      ...filtered,
+      ...pageMap,
     ]
   },
-
   mdxOptions: {
     remarkPlugins: [remarkCallouts, remarkTransformRemoteDocs],
     rehypePlugins: [rehypeUnwrapImages, rehypeMdxCodeProps],
@@ -128,12 +132,13 @@ export default withNextra({
       destination: '/en/',
       permanent: true,
     },
+    // If we ever change `output` to not be `export`, we should move all the redirects from `nginx.conf` here
   ],
   images: {
     unoptimized: true,
   },
   i18n: {
-    defaultLocale: ONLY_LOCALE,
-    locales: [ONLY_LOCALE], // English only
+    defaultLocale,
+    locales: Object.keys(translations),
   },
 })
