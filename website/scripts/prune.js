@@ -1,91 +1,71 @@
-// scripts/prune.js
-// Remove unwanted locales and stale caches before build to avoid
-// "Can't resolve .../nextra-page-map-<locale>.mjs" errors.
+// website/scripts/prune.js
+// Remove non-English locales BEFORE Next.js builds so it never discovers /ar routes.
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import url from 'node:url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+const root = path.resolve(__dirname, '..'); // -> website/
+const srcDir = path.join(root, 'src');
 
-// Configure which locale(s) you want to keep
-const KEEP_LOCALES = new Set(['en']);
+// locales to delete completely
+const NON_EN_LOCALES = ['ar','es','fa','ru','zh','ja','ko','pt','de','fr'];
 
-// Paths relative to the website/ folder
-const ROOT = path.resolve(__dirname, '..');
-const SRC_PAGES = path.join(ROOT, 'src', 'pages');
-const CACHES_TO_CLEAR = [
-  path.join(ROOT, '.nextra'), // nextra build cache
-  path.join(ROOT, '.next'),   // next build output, if any lingering locally
-];
-
-// Utility: exists?
-const exists = (p) => {
+function rmrf(targetPath) {
   try {
-    fs.accessSync(p, fs.constants.F_OK);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-// Utility: rm -rf
-const rimraf = (p) => {
-  if (!exists(p)) return;
-  fs.rmSync(p, { recursive: true, force: true });
-};
-
-// Utility: list dirs
-const listDirs = (p) => {
-  if (!exists(p)) return [];
-  return fs
-    .readdirSync(p, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => d.name);
-};
-
-function pruneLocales() {
-  if (!exists(SRC_PAGES)) {
-    console.log(`[prune] No src/pages directory at ${SRC_PAGES}, skipping.`);
-    return;
-  }
-
-  // Any folder directly under src/pages that looks like a locale code
-  // (e.g., "en", "ar", "fr", etc.) and is NOT in KEEP_LOCALES gets removed.
-  const topLevelDirs = listDirs(SRC_PAGES);
-
-  for (const dir of topLevelDirs) {
-    // Heuristic: treat a 2–5 letter folder name as a locale (en, ar, pt-BR, zh-CN, etc.)
-    const isLocaleLike = /^[a-z]{2,3}(-[A-Z]{2})?$/.test(dir);
-    if (!isLocaleLike) continue;
-
-    if (!KEEP_LOCALES.has(dir)) {
-      const target = path.join(SRC_PAGES, dir);
-      console.log(`[prune] Removing non-kept locale folder: ${path.relative(ROOT, target)}`);
-      rimraf(target);
+    if (fs.existsSync(targetPath)) {
+      fs.rmSync(targetPath, { recursive: true, force: true });
+      console.log(`[prune] Removed: ${targetPath}`);
     }
+  } catch (e) {
+    console.warn(`[prune] Failed to remove ${targetPath}:`, e?.message || e);
   }
 }
 
-function clearCaches() {
-  for (const folder of CACHES_TO_CLEAR) {
-    if (exists(folder)) {
-      console.log(`[prune] Removing cache/output folder: ${path.relative(ROOT, folder)}`);
-      rimraf(folder);
+function pruneLocaleFolders(baseDir) {
+  NON_EN_LOCALES.forEach((loc) => {
+    // Top-level locale folder: src/pages/ar, src/content/ar, etc.
+    const localeDir = path.join(baseDir, loc);
+    rmrf(localeDir);
+
+    // In case the project uses nested content trees like src/pages/docs/ar
+    // do a shallow scan of first-level subdirs and remove any /<subdir>/<loc>
+    try {
+      if (fs.existsSync(baseDir)) {
+        const firstLevel = fs.readdirSync(baseDir, { withFileTypes: true });
+        for (const entry of firstLevel) {
+          if (entry.isDirectory()) {
+            const maybeLocale = path.join(baseDir, entry.name, loc);
+            rmrf(maybeLocale);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn(`[prune] Scan error in ${baseDir}:`, e?.message || e);
     }
-  }
+
+    // If someone added single files like src/pages/ar.mdx (flat), remove them too
+    const flatFile = path.join(baseDir, `${loc}.mdx`);
+    rmrf(flatFile);
+    const flatDir = path.join(baseDir, `${loc}`);
+    rmrf(flatDir);
+  });
 }
 
-(function main() {
-  try {
-    console.log('[prune] Start');
-    pruneLocales();
-    clearCaches();
-    console.log('[prune] Done');
-  } catch (err) {
-    console.error('[prune] Failed:', err);
-    // Do not hard-fail CI; exit non-zero only if you prefer builds to stop.
-    process.exit(0);
-  }
-})();
+function main() {
+  console.log('[prune] Start pruning non-English locales…');
+
+  // Remove non-EN under src/pages and src/content (both are common in Nextra repos)
+  pruneLocaleFolders(path.join(srcDir, 'pages'));
+  pruneLocaleFolders(path.join(srcDir, 'content'));
+
+  // Safety: also remove any leftover build artifacts from prior local builds
+  // (Vercel fresh containers won’t have these, but it’s harmless locally)
+  rmrf(path.join(root, '.next'));
+  rmrf(path.join(root, 'out'));
+
+  console.log('[prune] Done.');
+}
+
+main();
