@@ -2,7 +2,8 @@
 
 import nextra from 'nextra'
 import rehypeMdxCodeProps from 'rehype-mdx-code-props'
-import webpack from 'webpack'
+// ✅ use Next's compiled webpack, not 'webpack'
+import { IgnorePlugin } from 'next/dist/compiled/webpack/webpack'
 
 import { translate } from '@edgeandnode/gds'
 
@@ -126,11 +127,10 @@ export default withNextra({
   },
   // 🔑 Hard-stop Webpack from including non-English page trees
   webpack: (config) => {
-    // Ignore any MDX under src/pages/<non-en-locale>/** to prevent
-    // importing nextra-page-map-<locale>.mjs chunks.
     config.plugins.push(
-      new webpack.IgnorePlugin({
-        resourceRegExp: /src[\\/](pages|content)[\\/](ar|es|fa|ru|zh|ja|ko|pt|de|fr)([\\/].*)?\.mdx$/,
+      new IgnorePlugin({
+        resourceRegExp:
+          /src[\\/](pages|content)[\\/](ar|es|fa|ru|zh|ja|ko|pt|de|fr)([\\/].*)?\.mdx$/,
       })
     )
     return config
