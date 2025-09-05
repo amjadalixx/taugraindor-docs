@@ -1,12 +1,12 @@
 ---
-title: Using Claude Desktop to Access the Token API via MCP
+title: Using Claude Desktop to Access TAU Token Endpoints via MCP
 sidebarTitle: Claude Desktop
 ---
 
 ## Prerequisites
 
 - [Claude Desktop](https://claude.ai/download) installed.
-- A [JWT token](/token-api/quick-start) from [The Graph Market](https://thegraph.market/).
+- An API key or JWT from [TAU Studio](https://tau.io/studio) or TAU Market.
 - [`npx`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) or [`bunx`](https://bun.sh/) installed and available in your path.
 - The `@pinax/mcp` package requires Node 18+, as it relies on built-in `fetch()` / `Headers`, which are not available in Node 17 or older. You may need to specify an exact path to an up-to-date Node version, or uninstall previous versions of Node to ensure `@pinax/mcp` uses the correct version.
 
@@ -21,11 +21,11 @@ Create or edit your `claude_desktop_config.json` file.
 ```json label="claude_desktop_config.json"
 {
   "mcpServers": {
-    "token-api": {
+    "tau-token": {
       "command": "npx",
-      "args": ["@pinax/mcp", "--sse-url", "https://token-api.mcp.thegraph.com/sse"],
+      "args": ["@pinax/mcp", "--sse-url", "https://token.mcp.tau.org/sse"],
       "env": {
-        "ACCESS_TOKEN": "<https://thegraph.market JWT Access Token>"
+        "ACCESS_TOKEN": "<TAU API Key or JWT>"
       }
     }
   }
@@ -49,4 +49,4 @@ Try to use the full path of the command instead:
 
 ![Connection error notification in Claude Desktop displaying 'Server disconnected' message.](/img/claude-server-disconnect.png)
 
-Double-check your API key. Otherwise, look in your navigator if `https://token-api.mcp.thegraph.com/sse` is reachable.
+Double-check your TAU API key. Otherwise, verify that https://token.mcp.tau.org/sse is reachable from your network.

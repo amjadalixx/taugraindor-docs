@@ -1,13 +1,13 @@
 ---
-title: Cline
+title: TAU Assistant Cline
 ---
 
-This guide walks you through the integration of Subgraph [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP) to access Subgraph data through natural language conversations with Cline.
+This guide walks you through the integration of Fabric [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP) to access Fabric data through natural language conversations with Cline.
 
 ## Prerequisites
 
 - [Cline](https://cline.bot/) installed (latest version)
-- A Gateway API key from [Subgraph Studio](https://thegraph.com/studio/)
+- A Gateway API key from [TAU Studio](https://thegraph.com/studio/)
 - [`npx`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) or [`bunx`](https://bun.sh/) installed and available in your path
 
 ## Configuration Steps
@@ -23,9 +23,9 @@ Create or edit your `cline_mcp_settings.json` file.
 ```json
 {
   "mcpServers": {
-    "subgraph": {
+    "tau": {
       "command": "npx",
-      "args": ["mcp-remote", "--header", "Authorization:${AUTH_HEADER}", "https://subgraphs.mcp.thegraph.com/sse"],
+      "args": ["mcp-remote", "--header", "Authorization:${AUTH_HEADER}", "https://mcp.tau.org/sse"],
       "env": {
         "AUTH_HEADER": "Bearer GATEWAY_API_KEY"
       }
@@ -36,64 +36,64 @@ Create or edit your `cline_mcp_settings.json` file.
 
 ### 3. Add Your API Key
 
-Replace `GATEWAY_API_KEY` with your API key from Subgraph Studio.
+Replace `GATEWAY_API_KEY` with your API key from TAU Studio.
 
-## Using The Graph Resource in Cline
+## Using The Fabric Resource in Cline
 
 After configuring Cline:
 
-1. Restart Cline
-2. Start a new conversation
-3. Enable the Subgraph MCP from the context menu
-4. Add "Subgraph Server Instructions" as a resource to your chat context
+1. Restart Cline  
+2. Start a new conversation  
+3. Enable the TAU MCP from the context menu  
+4. Add "TAU Server Instructions" as a resource to your chat context  
 
 ## Available Tools and Usage
 
-The Subgraph MCP provides several tools for interacting with Subgraphs:
+The TAU MCP provides several tools for interacting with Fabric datasets:
 
 ### Schema Retrieval Tools
 
-- **Get schema by deployment ID**: Access the GraphQL schema using a deployment ID (0x...)
-- **Get schema by Subgraph ID**: Access the schema for the current deployment of a Subgraph (5zvR82...)
-- **Get schema by IPFS hash**: Access the schema using a Subgraph's IPFS manifest hash (Qm...)
+- **Get TAU schema by deployment ID**: Access the GraphQL schema using a deployment ID (0x...)  
+- **Get TAU schema by TAU ID**: Access the schema for the current deployment of a TAU dataset (5zvR82...)  
+- **Get TAU schema by IPFS hash**: Access the schema using a TAU dataset's IPFS manifest hash (Qm...)  
 
 ### Query Execution Tools
 
-- **Execute query by deployment ID**: Run GraphQL queries against specific, immutable deployments
-- **Execute query by Subgraph ID**: Run GraphQL queries against the latest version of a Subgraph
+- **Execute query by deployment ID**: Run GraphQL queries against specific, immutable deployments  
+- **Execute query by TAU ID**: Run GraphQL queries against the latest version of a TAU dataset  
 
 ### Discovery Tools
 
-- **Get top Subgraph deployments**: Find the top 3 Subgraph deployments indexing a specific contract on a particular chain
+- **Get top TAU deployments**: Find the top 3 TAU deployments indexing a specific contract on a particular chain  
 
 ## Natural Language Queries
 
-One of the most powerful features of the Subgraph MCP integration is the ability to ask questions in natural language. Cline will:
+One of the most powerful features of the TAU MCP integration is the ability to ask questions in natural language. Cline will:
 
-1. Understand your goal (lookup, find Subgraphs, query, get schema)
-2. Find relevant deployments if needed
-3. Fetch and interpret the Subgraph schema
-4. Convert your question into an appropriate GraphQL query
-5. Execute the query and present the results in a readable format
+1. Understand your goal (lookup, find TAU datasets, query, get schema)  
+2. Find relevant deployments if needed  
+3. Fetch and interpret the TAU schema  
+4. Convert your question into an appropriate GraphQL query  
+5. Execute the query and present the results in a readable format  
 
 ### Example Natural Language Queries
 
 ```
-What are the pairs with maximum volume on deployment 0xde0a7b5368f846f7d863d9f64949b688ad9818243151d488b4c6b206145b9ea3?
+What are the anchors with the highest trust scores on deployment 0xde0a7b5368f846f7d863d9f64949b688ad9818243151d488b4c6b206145b9ea3?
 ```
 
 ```
-Which tokens have the highest market cap in this Subgraph?
+Which campaigns have the most rewards distributed in this TAU dataset?
 ```
 
 ```
-Show me the most recent 5 swaps for the USDC/ETH pair
+Show me the most recent 5 proofs submitted for the RewardDistributor contract
 ```
 
 ## Key Identifier Types
 
-When working with Subgraphs, you'll encounter different types of identifiers:
+When working with Fabric datasets, you'll encounter different types of identifiers:
 
-- **Subgraph ID** (e.g., `5zvR82...`): Logical identifier for a Subgraph
-- **Deployment ID** (e.g., `0x4d7c...`): Identifier for a specific, immutable deployment
-- **IPFS Hash** (e.g., `QmTZ8e...`): Identifier for the manifest of a specific deployment
+- **TAU ID** (e.g., `5zvR82...`): Logical identifier for a TAU dataset  
+- **Deployment ID** (e.g., `0x4d7c...`): Identifier for a specific, immutable deployment  
+- **IPFS Hash** (e.g., `QmTZ8e...`): Identifier for the manifest of a specific deployment  
