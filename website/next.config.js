@@ -2,7 +2,6 @@
 
 import nextra from 'nextra'
 import rehypeMdxCodeProps from 'rehype-mdx-code-props'
-
 import { translate } from '@edgeandnode/gds'
 
 import { translations } from './dist/i18n.js'
@@ -25,10 +24,10 @@ const env = {
   GOOGLE_ANALYTICS_MEASUREMENT_ID: process.env.NODE_ENV === 'production' ? 'G-5MK48LFNKY' : '',
 }
 
-// Keep the build small: English only
+// Build only English
 const ONLY_LOCALE = 'en'
 
-// Big sections to skip for now
+// Sections to exclude to reduce page count / mem
 const EXCLUDED_PREFIXES = [
   'ai-suite',
   'substreams',
@@ -46,7 +45,6 @@ const withNextra = nextra({
   readingTime: true,
 
   transformPageMap(pageMap) {
-    // Always translate using English strings
     const t = (/** @type {string} */ key) =>
       translate(
         translations,
@@ -123,12 +121,18 @@ export default withNextra({
     defaultLocale: ONLY_LOCALE,
     locales: [ONLY_LOCALE],
   },
-  // 🔑 Hard-stop Webpack from including non-English page trees
+
+  // Stop Webpack from ever bundling non-English content or page-map chunks
   webpack: (config, { webpack }) => {
     config.plugins.push(
+      // Ignore non-English MDX trees under src/pages or src/content
       new webpack.IgnorePlugin({
         resourceRegExp:
           /src[\\/](pages|content)[\\/](ar|es|fa|ru|zh|ja|ko|pt|de|fr)([\\/].*)?\.mdx$/,
+      }),
+      // Ignore any Nextra page-map chunk that is not English (e.g. nextra-page-map-ar.mjs)
+      new webpack.IgnorePlugin({
+        resourceRegExp: /nextra-page-map-(?!en)[a-z-]+\.mjs$/,
       })
     )
     return config
