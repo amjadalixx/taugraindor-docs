@@ -1,38 +1,38 @@
 {
   "title": "Home",
   "hero": {
-    "title": "TAU Docs",
-    "description": "TAU is a universal Web3 memory & trust layer on Ethereum L2. It powers applications, analytics, and AI with Anchors, Fabric datasets, and Token endpoints.",
-    "cta1": "How TAU works",
-    "cta2": "Build your first Anchor or Fabric dataset"
+    "title": "The Graph Docs",
+    "description": "The Graph is a blockchain data solution that powers applications, analytics, and AI on 90+ chains. The Graph's core products include the Token API for web3 apps, Subgraphs for indexing smart contracts, and Substreams for real-time and historical data streaming.",
+    "cta1": "How The Graph works",
+    "cta2": "Build your first subgraph"
   },
   "products": {
-    "title": "TAU's Products",
-    "description": "Choose a solution that fits your needs—interact with Web3 data and trust signals your way.",
+    "title": "The Graph's Products",
+    "description": "Choose a solution that fits your needs—interact with blockchain data your way.",
     "subgraphs": {
-      "title": "Fabric",
-      "description": "Extract, process, and query blockchain data with Fabric datasets.",
-      "cta": "Develop with Fabric"
+      "title": "Subgraphs",
+      "description": "Extract, process, and query blockchain data with open APIs.",
+      "cta": "Develop a subgraph"
     },
     "substreams": {
-      "title": "Anchors",
-      "description": "Anchor wallet trust and context across chains with verifiable proofs.",
-      "cta": "Develop with Anchors"
+      "title": "Substreams",
+      "description": "Fetch and consume blockchain data with parallel execution.",
+      "cta": "Develop with Substreams"
     },
     "tokenApi": {
-      "title": "TAU Token",
-      "description": "Query token data, balances, transfers, and trust anchors with MCP support.",
-      "cta": "Develop with TAU Token"
+      "title": "Token API",
+      "description": "Query token data and leverage native MCP support.",
+      "cta": "Develop with Token API"
     },
     "graphNode": {
-      "title": "TAU Node",
-      "description": "Index blockchain + trust data and serve it via queries.",
-      "cta": "Set up a local TAU Node"
+      "title": "Graph Node",
+      "description": "Index blockchain data and serve it via GraphQL queries.",
+      "cta": "Set up a local Graph Node"
     },
     "firehose": {
-      "title": "Proof Streams",
-      "description": "Stream Anchors and proofs for high-speed synchronization.",
-      "cta": "Get started with Proof Streams"
+      "title": "Firehose",
+      "description": "Extract blockchain data into flat files to speed sync times.",
+      "cta": "Get started with Firehose"
     }
   },
   "supportedNetworks": {
@@ -51,10 +51,10 @@
     "showTestnets": "Show Testnets",
     "loading": "Loading...",
     "infoTitle": "Info",
-    "infoText": "Boost your developer experience by enabling TAU’s Anchors and Fabric indexing.",
+    "infoText": "Boost your developer experience by enabling The Graph's indexing network.",
     "infoLink": "Integrate new network",
     "description": {
-      "base": "TAU supports {0}. To add a new network, {1}",
+      "base": "The Graph supports {0}. To add a new network, {1}",
       "networks": "networks",
       "completeThisForm": "complete this form"
     },
@@ -99,32 +99,32 @@
   "networkGuides": {
     "evm": {
       "subgraphQuickStart": {
-        "title": "Fabric quick start",
-        "description": "Kickstart your journey into Fabric dataset development."
+        "title": "Subgraph quick start",
+        "description": "Kickstart your journey into subgraph development."
       },
       "substreamsQuickStart": {
-        "title": "Anchors quick start",
-        "description": "Set up Anchors to capture wallet trust and proofs."
+        "title": "Substreams quick start",
+        "description": "Stream high-speed data for real-time indexing."
       },
       "tokenApi": {
-        "title": "TAU Token API",
-        "description": "Query TAU token data and leverage native MCP support."
+        "title": "The Graph's Token API",
+        "description": "Query token data and leverage native MCP support."
       },
       "graphExplorer": {
-        "title": "TAU Explorer",
-        "description": "Find and query existing Anchors, Fabric datasets, and token data."
+        "title": "Graph Explorer",
+        "description": "Find and query existing blockchain data."
       },
       "substreamsDev": {
-        "title": "Anchors.dev",
-        "description": "Access tutorials, templates, and documentation to build trust Anchors."
+        "title": "Substreams.dev",
+        "description": "Access tutorials, templates, and documentation to build custom data modules."
       },
       "timeseries": {
         "title": "Timeseries & Aggregations",
         "description": "Learn to track metrics like daily volumes or user growth."
       },
       "advancedFeatures": {
-        "title": "Advanced Fabric features",
-        "description": "Leverage advanced features for Fabric datasets like custom data sources and event handlers."
+        "title": "Advanced subgraph features",
+        "description": "Leverage features like custom data sources, event handlers, and topic filters."
       },
       "billing": {
         "title": "Billing",
@@ -133,27 +133,27 @@
     },
     "nonEvm": {
       "officialDocs": {
-        "title": "Official Anchors docs",
+        "title": "Official Substreams docs",
         "description": "Stream high-speed data for real-time indexing."
       },
       "spsIntro": {
-        "title": "Anchors-powered Fabric Intro",
-        "description": "Supercharge your Fabric datasets with Anchors."
+        "title": "Substreams-powered Subgraphs Intro",
+        "description": "Supercharge your subgraph's efficiency with Substreams."
       },
       "substreamsDev": {
-        "title": "Anchors.dev",
+        "title": "Substreams.dev",
         "description": "Access tutorials, templates, and documentation to build custom data modules."
       },
       "customSubstreamsSinks": {
-        "title": "Custom Anchor Sinks",
+        "title": "Custom Substreams Sinks",
         "description": "Leverage existing Substreams sinks to access data."
       },
       "substreamsStarter": {
-        "title": "Anchors starter",
+        "title": "Substreams starter",
         "description": "Leverage this boilerplate to create your first Substreams module."
       },
       "substreamsRepo": {
-        "title": "Anchors GitHub repository",
+        "title": "Substreams GitHub repository",
         "description": "Study, contribute to, or customize the core Substreams framework."
       }
     }
@@ -162,48 +162,48 @@
     "title": "Guides",
     "description": "",
     "explorer": {
-      "title": "Find Data in TAU Explorer",
-      "description": "Leverage Fabric datasets, Anchors, and token endpoints for blockchain + trust data."
+      "title": "Find Data in Graph Explorer",
+      "description": "Leverage hundreds of public subgraphs for existing blockchain data."
     },
     "publishASubgraph": {
-      "title": "Publish a Fabric dataset",
-      "description": "Add your Fabric dataset to the TAU Network."
+      "title": "Publish a Subgraph",
+      "description": "Add your subgraph to the decentralized network."
     },
     "publishSubstreams": {
-      "title": "Publish Anchors",
-      "description": "Launch your Anchors package to the Anchors Registry."
+      "title": "Publish Substreams",
+      "description": "Launch your Substreams package to the Substreams Registry."
     },
     "queryingBestPractices": {
       "title": "Querying Best Practices",
-      "description": "Optimize your Fabric queries for faster, better results."
+      "description": "Optimize your subgraph queries for faster, better results."
     },
     "timeseries": {
       "title": "Optimized Timeseries & Aggregations",
-      "description": "Streamline your Fabric datasets for efficiency."
+      "description": "Streamline your subgraph for efficiency."
     },
     "apiKeyManagement": {
       "title": "API Key Management",
-      "description": "Easily create, manage, and secure API keys for your Fabric datasets."
+      "description": "Easily create, manage, and secure API keys for your subgraphs."
     },
     "transferToTheGraph": {
-      "title": "Transfer to TAU",
-      "description": "Seamlessly upgrade your Fabric datasets or Anchors from any platform."
+      "title": "Transfer to The Graph",
+      "description": "Seamlessly upgrade your subgraph from any platform."
     }
   },
   "videos": {
     "title": "Video Tutorials",
     "watchOnYouTube": "Watch on YouTube",
     "theGraphExplained": {
-      "title": "TAU Explained In 1 Minute",
-      "description": "Learn how and why TAU is the trust backbone of Web3 in this short, non-technical video."
+      "title": "The Graph Explained In 1 Minute",
+      "description": "Learn how and why The Graph is the backbone of web3 in this short, non-technical video."
     },
     "whatIsDelegating": {
       "title": "What is Delegating?",
-      "description": "This video explains key concepts to understand before staking TAU, which secures the TAU Network."
+      "description": "This video explains key concepts to understand before delegating, a form of staking that helps secure The Graph."
     },
     "howToIndexSolana": {
-      "title": "How to Index Solana with Anchors-powered Fabric",
-      "description": "If you're familiar with Fabric datasets, discover how Anchors offer a different approach for trust and context."
+      "title": "How to Index Solana with a Substreams-powered Subgraph",
+      "description": "If you're familiar with Subgraphs, discover how Substreams offer a different approach for key use cases."
     }
   },
   "time": {
