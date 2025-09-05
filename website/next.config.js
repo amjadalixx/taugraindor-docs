@@ -31,16 +31,26 @@ const withNextra = nextra({
   codeHighlight: false,
   defaultShowCopyCode: false,
   readingTime: true,
+
+  // ↓↓↓ Exclude non-English locales and archived content to shrink build
+  exclude: [
+    'src/pages/ar/**',
+    'src/pages/zh/**',
+    'src/pages/ja/**',
+    'src/pages/es/**',
+    'src/pages/fr/**',
+    'src/pages/ru/**',
+    'src/pages/archived/**',
+  ],
+
   transformPageMap(pageMap) {
     const route = pageMap[0] && 'route' in pageMap[0] ? pageMap[0].route : undefined
     const locale = typeof route === 'string' ? route.slice(1, 3) : defaultLocale
     const t = (/** @type {string} */ key) =>
       translate(
         translations,
-        /** @type {import('@edgeandnode/gds').Locale} */
-        (locale),
-        /** @type {any} */
-        (key),
+        /** @type {import('@edgeandnode/gds').Locale} */ (locale),
+        /** @type {any} */ (key),
       )
 
     // TODO: Move back to `src/pages/en/_meta.js` and add `src/pages/en/_meta-titles.json` for the translations
@@ -49,52 +59,19 @@ const withNextra = nextra({
       about: '',
       'supported-networks': '',
       contracts: '',
-      '---1': {
-        type: 'separator',
-      },
-      subgraphs: {
-        type: 'children',
-        title: t('global.navigation.subgraphs'),
-      },
-      '---2': {
-        type: 'separator',
-      },
-      substreams: {
-        type: 'children',
-        title: t('global.navigation.substreams'),
-      },
-      '---3': {
-        type: 'separator',
-      },
-      'token-api': {
-        type: 'children',
-        title: t('global.navigation.tokenApi'),
-      },
-      '---4': {
-        type: 'separator',
-      },
-      'ai-suite': {
-        type: 'children',
-        title: t('global.navigation.ai-suite'),
-      },
-      '---5': {
-        type: 'separator',
-      },
-      indexing: {
-        type: 'children',
-        title: t('global.navigation.indexing'),
-      },
-      '---6': {
-        type: 'separator',
-      },
-      resources: {
-        type: 'children',
-        title: t('global.navigation.resources'),
-      },
-      archived: {
-        type: 'children',
-        title: t('global.navigation.archived'),
-      },
+      '---1': { type: 'separator' },
+      subgraphs: { type: 'children', title: t('global.navigation.subgraphs') },
+      '---2': { type: 'separator' },
+      substreams: { type: 'children', title: t('global.navigation.substreams') },
+      '---3': { type: 'separator' },
+      'token-api': { type: 'children', title: t('global.navigation.tokenApi') },
+      '---4': { type: 'separator' },
+      'ai-suite': { type: 'children', title: t('global.navigation.ai-suite') },
+      '---5': { type: 'separator' },
+      indexing: { type: 'children', title: t('global.navigation.indexing') },
+      '---6': { type: 'separator' },
+      resources: { type: 'children', title: t('global.navigation.resources') },
+      archived: { type: 'children', title: t('global.navigation.archived') },
     }
 
     return [
@@ -137,8 +114,10 @@ export default withNextra({
   images: {
     unoptimized: true,
   },
+
+  // ↓↓↓ Limit i18n to English only for now
   i18n: {
-    defaultLocale,
-    locales: Object.keys(translations),
+    defaultLocale: 'en',
+    locales: ['en'],
   },
 })
