@@ -17,7 +17,6 @@ const DEFAULT_LOCALE = 'en'
 const env = {
   ENVIRONMENT: process.env.ENVIRONMENT,
   ORIGIN: process.env.ORIGIN,
-  BASE_PATH: process.env.BASE_PATH,
   ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY,
   ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
   MIXPANEL_TOKEN:
@@ -71,7 +70,7 @@ const withNextra = nextra({
         /** @type {any} */ (key),
       )
 
-    // sidebar (_meta) kept minimal & safe for all allowed locales
+    // sidebar (_meta)
     const metaFile = {
       index: t('index.title'),
       about: '',
@@ -116,7 +115,11 @@ export default withNextra({
   },
   pageExtensions: ['tsx', 'md', 'mdx'],
   reactStrictMode: true,
-  basePath: env.BASE_PATH,
+
+  // IMPORTANT: set basePath/assetPrefix at top level, not in env
+  basePath: '',            // serve at root (so /en/ works)
+  assetPrefix: undefined,  // no prefix
+
   trailingSlash: true,
   redirects: async () => [
     { source: '/', destination: `/${DEFAULT_LOCALE}/`, permanent: true },
