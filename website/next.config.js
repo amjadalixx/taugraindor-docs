@@ -3,7 +3,7 @@
 import nextra from 'nextra'
 import rehypeMdxCodeProps from 'rehype-mdx-code-props'
 
-import { defaultLocale, translate } from '@edgeandnode/gds'
+import { translate } from '@edgeandnode/gds'
 
 import { translations } from './dist/i18n.js'
 import rehypeUnwrapImages from './dist/mdxPlugins/rehypeUnwrapImages.js'
@@ -25,88 +25,80 @@ const env = {
   GOOGLE_ANALYTICS_MEASUREMENT_ID: process.env.NODE_ENV === 'production' ? 'G-5MK48LFNKY' : '',
 }
 
+// Force a single locale to keep build small
+const ONLY_LOCALE = 'en'
+
+// sections we don't want to pre-render right now
+const EXCLUDED_PREFIXES = [
+  'ai-suite',
+  'substreams',
+  'token-api',
+  'indexing',
+  'resources',
+  'archived',
+]
+
 const withNextra = nextra({
   theme: './src/layout/Layout.tsx',
   search: false,
   codeHighlight: false,
   defaultShowCopyCode: false,
   readingTime: true,
+
   transformPageMap(pageMap) {
-    const route = pageMap[0] && 'route' in pageMap[0] ? pageMap[0].route : undefined
-    const locale = typeof route === 'string' ? route.slice(1, 3) : defaultLocale
+    // translation helper (always English for now)
     const t = (/** @type {string} */ key) =>
       translate(
         translations,
-        /** @type {import('@edgeandnode/gds').Locale} */
-        (locale),
-        /** @type {any} */
-        (key),
+        /** @type {import('@edgeandnode/gds').Locale} */ (ONLY_LOCALE),
+        /** @type {any} */ (key),
       )
 
-    // TODO: Move back to `src/pages/en/_meta.js` and add `src/pages/en/_meta-titles.json` for the translations
+    /** Recursively drop:
+     *  - any locale that is not `en`
+     *  - any /en/<section>/... where <section> is in EXCLUDED_PREFIXES
+     */
+    const filterItems = (items) =>
+      items
+        .filter((item) => {
+          if (!('route' in item) || typeof item.route !== 'string') return true
+          const parts = item.route.split('/').filter(Boolean) // ["en","subgraphs",...]
+          const lang = parts[0]
+          const section = parts[1] || ''
+          if (lang && lang !== ONLY_LOCALE) return false
+          if (EXCLUDED_PREFIXES.includes(section)) return false
+          return true
+        })
+        .map((item) => {
+          if ('children' in item && Array.isArray(item.children)) {
+            return { ...item, children: filterItems(item.children) }
+          }
+          return item
+        })
+
+    const filtered = filterItems(pageMap)
+
+    // Minimal sidebar to avoid linking to removed sections
     const metaFile = {
       index: t('index.title'),
       about: '',
       'supported-networks': '',
       contracts: '',
-      '---1': {
-        type: 'separator',
-      },
-      subgraphs: {
-        type: 'children',
-        title: t('global.navigation.subgraphs'),
-      },
-      '---2': {
-        type: 'separator',
-      },
-      substreams: {
-        type: 'children',
-        title: t('global.navigation.substreams'),
-      },
-      '---3': {
-        type: 'separator',
-      },
-      'token-api': {
-        type: 'children',
-        title: t('global.navigation.tokenApi'),
-      },
-      '---4': {
-        type: 'separator',
-      },
-      'ai-suite': {
-        type: 'children',
-        title: t('global.navigation.ai-suite'),
-      },
-      '---5': {
-        type: 'separator',
-      },
-      indexing: {
-        type: 'children',
-        title: t('global.navigation.indexing'),
-      },
-      '---6': {
-        type: 'separator',
-      },
-      resources: {
-        type: 'children',
-        title: t('global.navigation.resources'),
-      },
-      archived: {
-        type: 'children',
-        title: t('global.navigation.archived'),
-      },
+      '---1': { type: 'separator' },
+      subgraphs: { type: 'children', title: t('global.navigation.subgraphs') },
     }
 
     return [
       { data: metaFile },
       {
-        route: `/${locale}`,
+        route: `/${ONLY_LOCALE}`,
         name: 'index',
         frontMatter: {},
       },
-      ...pageMap,
+      ...filtered,
     ]
   },
+
   mdxOptions: {
     remarkPlugins: [remarkCallouts, remarkTransformRemoteDocs],
     rehypePlugins: [rehypeUnwrapImages, rehypeMdxCodeProps],
@@ -127,18 +119,11 @@ export default withNextra({
   basePath: env.BASE_PATH,
   trailingSlash: true,
   redirects: async () => [
-    {
-      source: '/',
-      destination: '/en/',
-      permanent: true,
-    },
-    // If we ever change `output` to not be `export`, we should move all the redirects from `nginx.conf` here
+    { source: '/', destination: '/en/', permanent: true },
   ],
-  images: {
-    unoptimized: true,
-  },
+  images: { unoptimized: true },
   i18n: {
-    defaultLocale,
-    locales: Object.keys(translations),
+    defaultLocale: ONLY_LOCALE,
+    locales: [ONLY_LOCALE],
   },
 })
